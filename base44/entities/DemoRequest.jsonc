@@ -1,0 +1,44 @@
+{
+  "name": "DemoRequest",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "Nombre",
+      "description": "Nombre completo del solicitante"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "title": "Email",
+      "description": "Email corporativo del solicitante"
+    },
+    "role": {
+      "type": "string",
+      "title": "Rol",
+      "description": "Rol del solicitante en su organizaci\u00f3n"
+    },
+    "company": {
+      "type": "string",
+      "title": "Empresa",
+      "description": "Nombre de la empresa (opcional)"
+    },
+    "status": {
+      "type": "string",
+      "title": "Estado",
+      "description": "Estado del lead",
+      "enum": [
+        "new",
+        "contacted",
+        "demo_scheduled",
+        "closed"
+      ],
+      "default": "new"
+    }
+  },
+  "required": [
+    "name",
+    "email",
+    "role"
+  ]
+}
