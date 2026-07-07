@@ -25,4 +25,4 @@ export default function AnimatedCounter({ value, prefix = "", suffix = "", durat
       {prefix}{display}{suffix}
     </span>
   );
-}
+}2
