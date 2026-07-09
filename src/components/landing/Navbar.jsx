@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Link, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import MagneticButton from "./MagneticButton";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
@@ -12,11 +13,12 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const navigate = useNavigate();
+
   const NAV_LINKS = [
-    { label: t.nav.product, href: "#producto" },
-    { label: t.nav.howToUse, href: "#como-se-usa" },
-    { label: t.nav.coverage, href: "#cobertura" },
-    { label: t.nav.scale, href: "#escala" },
+    { label: t.nav.product, href: "/solucion", isRoute: true },
+    { label: t.nav.howToUse, href: "/como-se-usa", isRoute: true },
+    { label: t.nav.resources, href: "/recursos", isRoute: true },
   ];
 
   useEffect(() => {
@@ -44,9 +46,7 @@ export default function Navbar() {
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             className="flex items-center gap-2.5"
           >
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo to-cyan flex items-center justify-center text-white font-black text-sm">
-              N
-            </div>
+            <img src="/favicon.svg" alt="Next Reporting" className="w-9 h-9 rounded-lg" />
             <div className="flex flex-col leading-none text-left">
               <span className="text-ink font-extrabold text-base tracking-tight">
                 Next Reporting
@@ -64,8 +64,13 @@ export default function Navbar() {
                 key={l.href}
                 type="button"
                 onClick={() => {
-                  const el = document.querySelector(l.href);
-                  if (el) el.scrollIntoView({ behavior: "smooth" });
+                  if (l.isRoute) {
+                    navigate(l.href);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  } else {
+                    const el = document.querySelector(l.href);
+                    if (el) el.scrollIntoView({ behavior: "smooth" });
+                  }
                 }}
                 className="text-sm text-gray-500 hover:text-indigo transition-colors font-medium"
               >
@@ -73,7 +78,11 @@ export default function Navbar() {
               </button>
             ))}
             <LanguageSwitcher />
-            <MagneticButton href="#demo" primary>
+            <MagneticButton
+              to="/solicitar-demo"
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              primary
+            >
               {t.nav.requestDemo}
             </MagneticButton>
           </div>
@@ -117,8 +126,13 @@ export default function Navbar() {
                   type="button"
                   onClick={() => {
                     setMenuOpen(false);
-                    const el = document.querySelector(l.href);
-                    if (el) el.scrollIntoView({ behavior: "smooth" });
+                    if (l.isRoute) {
+                      navigate(l.href);
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    } else {
+                      const el = document.querySelector(l.href);
+                      if (el) el.scrollIntoView({ behavior: "smooth" });
+                    }
                   }}
                   className="block w-full text-left text-gray-600 hover:text-indigo text-base font-medium"
                 >
@@ -139,8 +153,8 @@ export default function Navbar() {
                 type="button"
                 onClick={() => {
                   setMenuOpen(false);
-                  const el = document.querySelector("#demo");
-                  if (el) el.scrollIntoView({ behavior: "smooth" });
+                  navigate("/solicitar-demo");
+                  window.scrollTo({ top: 0, behavior: "smooth" });
                 }}
                 className="block w-full bg-ink text-white text-center font-semibold py-3 rounded-full"
               >

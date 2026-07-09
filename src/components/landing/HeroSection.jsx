@@ -47,7 +47,7 @@ export default function HeroSection() {
   const { t } = useI18n();
 
   const FLOATING_CHIPS = [
-    { text: t.hero.chips.ebitda, color: "text-mint", top: "8%", left: "2%", delay: 1.2 },
+    { text: t.hero.chips.ebitda, color: "text-mint", top: "18%", left: "2%", delay: 1.2 },
     { text: t.hero.chips.boardPack, color: "text-indigo", top: "70%", left: "-4%", delay: 1.5 },
     { text: t.hero.chips.ai, color: "text-rose", top: "40%", right: "-6%", delay: 1.8 },
     { text: t.hero.chips.entities, color: "text-cyan", top: "88%", right: "4%", delay: 2.1 },
@@ -118,7 +118,7 @@ export default function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.7 }}
               className="font-extrabold text-ink leading-[1.0] tracking-[-0.035em] mb-6"
-              style={{ fontSize: "clamp(2.75rem, 5.5vw, 4.75rem)" }}
+              style={{ fontSize: "clamp(1.5rem, 3vw, 2.75rem)" }}
             >
               <span className="block">{t.hero.title1}</span>
               <span className="block">
@@ -144,10 +144,10 @@ export default function HeroSection() {
               transition={{ delay: 0.5 }}
               className="flex flex-wrap gap-3 mb-8"
             >
-              <MagneticButton href="#demo" primary>
+              <MagneticButton to="/solicitar-demo" primary onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
                 {t.hero.ctaPrimary}
               </MagneticButton>
-              <MagneticButton href="#producto" primary={false}>
+              <MagneticButton to="/solucion" primary={false} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
                 {t.hero.ctaSecondary}
               </MagneticButton>
             </motion.div>

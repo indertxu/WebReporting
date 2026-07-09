@@ -9,6 +9,10 @@ import ScrollToTop from './components/ScrollToTop';
 import { LanguageProvider } from '@/lib/i18n';
 import Home from './pages/Home';
 import OnePager from './pages/OnePager';
+import Solucion from './pages/Solucion';
+import Recursos from './pages/Recursos';
+import SolicitarDemo from './pages/SolicitarDemo';
+import ComoSeUsa from './pages/ComoSeUsa';
 import ConsentNotice from './components/landing/ConsentNotice';
 // Add page imports here
 
@@ -18,7 +22,7 @@ const AuthenticatedApp = () => {
   // Show loading spinner while checking app public settings or auth
   if (isLoadingPublicSettings || isLoadingAuth) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-[#F0FDF4]">
+      <div className="fixed inset-0 flex items-center justify-center bg-cloud">
         <div className="w-8 h-8 border-4 border-mint/20 border-t-indigo rounded-full animate-spin"></div>
       </div>
     );
@@ -39,6 +43,10 @@ const AuthenticatedApp = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/solucion" element={<Solucion />} />
+      <Route path="/recursos" element={<Recursos />} />
+      <Route path="/solicitar-demo" element={<SolicitarDemo />} />
+      <Route path="/como-se-usa" element={<ComoSeUsa />} />
       <Route path="/one-pager" element={<OnePager />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>

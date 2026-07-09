@@ -7,9 +7,9 @@ import KPISection from "@/components/landing/KPISection";
 import TrustStrip from "@/components/landing/TrustStrip";
 import CapabilitiesBento from "@/components/landing/CapabilitiesBento";
 import ProductShowcase from "@/components/landing/ProductShowcase";
-import DayInTheLife from "@/components/landing/DayInTheLife";
+
 import ScaleNumbers from "@/components/landing/ScaleNumbers";
-import CoverageMap from "@/components/landing/CoverageMap";
+
 import Testimonial from "@/components/landing/Testimonial";
 import PartnerStrip from "@/components/landing/PartnerStrip";
 import FinalCTA from "@/components/landing/FinalCTA";
@@ -26,9 +26,9 @@ export default function Home() {
       <TrustStrip />
       <CapabilitiesBento />
       <ProductShowcase />
-      <DayInTheLife />
+     
       <ScaleNumbers />
-      <CoverageMap />
+      
       <Testimonial />
       <PartnerStrip />
       <FinalCTA />

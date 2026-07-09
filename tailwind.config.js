@@ -50,7 +50,7 @@ module.exports = {
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
   			},
-        cloud: '#F0FDF4',
+        cloud: '#F9FDFB',
         ink: '#064E3B',
         'ink-soft': '#047857',
         indigo: '#059669',

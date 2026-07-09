@@ -1,19 +1,90 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle2, Loader2, ArrowRight, Download, Calendar, Tag, LogIn } from "lucide-react";
-import { base44 } from "@/api/base44Client";
+
 import { useI18n } from "@/lib/i18n";
+
+const COUNTRIES = [
+  { code: "ES", flag: "🇪🇸", prefix: "+34" },
+  { code: "PT", flag: "🇵🇹", prefix: "+351" },
+  { code: "DK", flag: "🇩🇰", prefix: "+45" },
+  { code: "GB", flag: "🇬🇧", prefix: "+44" },
+  { code: "US", flag: "🇺🇸", prefix: "+1" },
+  { code: "FR", flag: "🇫🇷", prefix: "+33" },
+  { code: "DE", flag: "🇩🇪", prefix: "+49" },
+  { code: "IT", flag: "🇮🇹", prefix: "+39" },
+  { code: "NL", flag: "🇳🇱", prefix: "+31" },
+  { code: "BE", flag: "🇧🇪", prefix: "+32" },
+  { code: "IE", flag: "🇮🇪", prefix: "+353" },
+  { code: "MX", flag: "🇲🇽", prefix: "+52" },
+  { code: "AR", flag: "🇦🇷", prefix: "+54" },
+  { code: "CL", flag: "🇨🇱", prefix: "+56" },
+  { code: "CO", flag: "🇨🇴", prefix: "+57" },
+  { code: "PE", flag: "🇵🇪", prefix: "+51" },
+  { code: "BR", flag: "🇧🇷", prefix: "+55" },
+];
+
+function buildAutoReplyHtml(name) {
+  const html = [
+    '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Next Reporting</title></head>',
+    '<body style="margin:0;padding:0;background:#f5f7fa;font-family:Arial,sans-serif;color:#0f172a;">',
+    '<table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f7fa;padding:40px 20px;"><tr><td align="center">',
+    '<table width="640" cellpadding="0" cellspacing="0" style="max-width:640px;background:#ffffff;border-radius:8px;overflow:hidden;border:1px solid #e2e8f0;">',
+    '<tr><td style="background:#ffffff;padding:28px 44px;border-bottom:2px solid #f1f5f9;">',
+    '<table cellpadding="0" cellspacing="0" border="0"><tr>',
+    '<td style="padding-right:14px;vertical-align:middle;"><img src="https://i.postimg.cc/RVZ7kfXx/Captura-de-pantalla-2026-07-08-115450.png" alt="Next Reporting" width="80" style="display:block;border:0;height:auto;max-width:80px;max-height:80px;width:auto;"/></td>',
+    '<td style="vertical-align:middle;"><div style="font-size:22px;font-weight:bold;color:#059669;">Next Reporting</div>',
+    '<div style="font-size:10px;letter-spacing:2px;color:#94a3b8;margin-top:4px;text-transform:uppercase;">By Next Finance</div></td>',
+    '</tr></table></td></tr>',
+    '<tr><td background="https://i.postimg.cc/3wGCKnYb/imgen-de-fondo.jpg" bgcolor="#0f172a" valign="middle" style="background-image:url(https://i.postimg.cc/3wGCKnYb/imgen-de-fondo.jpg);background-color:#0f172a;background-position:center center;background-repeat:no-repeat;background-size:cover;padding:0;">',
+    '<div style="background-color:rgba(15,23,42,0.78);padding:44px;">',
+    '<div style="color:#10b981;font-size:11px;letter-spacing:3px;text-transform:uppercase;font-weight:bold;margin-bottom:14px;">Solicitud de demo</div>',
+    '<h1 style="color:#ffffff;font-size:28px;font-weight:bold;margin:0 0 10px 0;text-shadow:0 2px 8px rgba(0,0,0,0.6);">Confirmación de recepción</h1>',
+    '<p style="color:#e5e7eb;font-size:14px;margin:0;text-shadow:0 1px 4px rgba(0,0,0,0.6);">Su solicitud ha sido registrada correctamente en nuestros sistemas.</p>',
+    '</div>',
+    '</td></tr>',
+    '<tr><td style="padding:44px 44px 24px 44px;">',
+    '<p style="font-size:16px;color:#0f172a;margin:0 0 20px 0;">Estimado/a <strong>' + name + '</strong>,</p>',
+    '<p style="font-size:14px;color:#334155;line-height:1.75;margin:0 0 18px 0;">Le confirmamos que hemos recibido su solicitud de demostración de <strong>Next Reporting</strong>. Nuestro departamento comercial procederá a revisar la información remitida y contactará con usted en un plazo máximo de <strong>24 horas laborables</strong> para coordinar la sesión.</p>',
+    '<p style="font-size:14px;color:#334155;line-height:1.75;margin:0 0 18px 0;">La demostración, de aproximadamente 30 minutos de duración, se adaptará específicamente al perfil de su organización y los requerimientos particulares de su función de reporting.</p>',
+    '<div style="font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:2px;font-weight:bold;margin:32px 0 12px 0;">Detalles de la solicitud</div>',
+    '<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top:1px solid #e2e8f0;margin:0 0 28px 0;">',
+    '<tr><td style="padding:12px 0;font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:1px;width:40%;border-bottom:1px solid #e2e8f0;">Objeto</td>',
+    '<td style="padding:12px 0;font-size:13px;color:#0f172a;font-weight:bold;border-bottom:1px solid #e2e8f0;">Demostración de producto</td></tr>',
+    '<tr><td style="padding:12px 0;font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #e2e8f0;">Duración</td>',
+    '<td style="padding:12px 0;font-size:13px;color:#0f172a;font-weight:bold;border-bottom:1px solid #e2e8f0;">30 minutos</td></tr>',
+    '<tr><td style="padding:12px 0;font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #e2e8f0;">Plazo de contacto</td>',
+    '<td style="padding:12px 0;font-size:13px;color:#0f172a;font-weight:bold;border-bottom:1px solid #e2e8f0;">Máximo 24 horas laborables</td></tr>',
+    '<tr><td style="padding:12px 0;font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:1px;">Modalidad</td>',
+    '<td style="padding:12px 0;font-size:13px;color:#0f172a;font-weight:bold;">Videoconferencia (Microsoft Teams)</td></tr>',
+    '</table>',
+    '<p style="font-size:14px;color:#334155;line-height:1.7;margin:24px 0 6px 0;">Para cualquier consulta previa o aclaración adicional, puede responder directamente a este correo electrónico.</p>',
+    '<p style="font-size:14px;color:#334155;line-height:1.7;margin:24px 0 6px 0;">Agradecemos su interés en Next Reporting y quedamos a su entera disposición.</p>',
+    '<div style="margin:28px 0 0 0;padding:20px 0 0 0;border-top:1px solid #e2e8f0;">',
+    '<div style="font-size:14px;color:#0f172a;font-weight:bold;">Departamento Comercial</div>',
+    '<div style="font-size:12px;color:#64748b;margin-top:4px;">Next Reporting - By Next Finance</div>',
+    '</div></td></tr>',
+    '<tr><td style="background:#0f172a;padding:28px 44px;">',
+    '<div style="font-size:11px;color:#ffffff;font-weight:bold;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">Next Reporting - By Next Finance</div>',
+    '<div style="font-size:11px;color:#94a3b8;margin-bottom:3px;">Reporting and Analysis - Consolidacion y Analisis Financiero</div>',
+    '<div style="font-size:11px;color:#94a3b8;margin-bottom:3px;">Madrid - Copenhague</div>',
+    '<div style="font-size:11px;color:#94a3b8;">Idiomas: ES - PT - EN - DA</div>',
+    '</td></tr>',
+    '</table></td></tr></table></body></html>'
+  ].join('');
+  return html;
+}
 
 function DemoForm({ t, onSuccess }) {
   const f = t.finalCta.form;
-  const [form, setForm] = useState({ name: "", email: "", role: "", company: "" });
+  const [form, setForm] = useState({ name: "", lastName: "", email: "", role: "", company: "", city: "", countryCode: "+34", phone: "", message: "" });
   const [customRole, setCustomRole] = useState("");
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.name || !form.email || !form.role) {
+    if (!form.name || !form.lastName || !form.email || !form.role || !form.company) {
       setError(f.errorFields);
       return;
     }
@@ -24,15 +95,65 @@ function DemoForm({ t, onSuccess }) {
     setStatus("submitting");
     setError("");
     try {
-      const payload = {
-        ...form,
-        role: form.role === t.finalCta.roles[5] ? customRole.trim() : form.role,
-      };
-      await base44.functions.invoke("submitDemoRequest", payload);
+      const finalRole =
+        form.role === t.finalCta.roles[5] ? customRole.trim() : form.role;
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: "8144f96b-b1eb-453e-a509-7a157eb77423",
+          subject: `Nueva solicitud de demo - ${form.name}${form.company ? ` (${form.company})` : ""}`,
+          from_name: "Next Reporting - Formulario web",
+          replyto: form.email,
+          Nombre: form.name,
+          Apellido: form.lastName,
+          Email: form.email,
+          Rol: finalRole,
+          Empresa: form.company,
+          Ciudad: form.city || "(no indicada)",
+          Telefono: form.phone ? `${form.countryCode} ${form.phone}` : "(no indicado)",
+          Mensaje: form.message || "(sin mensaje)",
+        }),
+      });
+      const data = await response.json();
+      if (!data.success) {
+        throw new Error(data.message || f.errorGeneric);
+      }
+      try {
+        const emailjsResponse = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            service_id: "service_d1awlag",
+            template_id: "template_88b0rdg",
+            user_id: "WzqbYL3YsjFD9zhiK",
+            template_params: {
+              email: form.email,
+              name: form.name,
+              to_email: form.email,
+              to_name: form.name,
+              message_html: buildAutoReplyHtml(form.name),
+            },
+          }),
+        });
+        const emailjsText = await emailjsResponse.text();
+        console.log("[EmailJS] status:", emailjsResponse.status);
+        console.log("[EmailJS] response:", emailjsText);
+        if (!emailjsResponse.ok) {
+          console.error("[EmailJS] FALLO:", emailjsText);
+        } else {
+          console.log("[EmailJS] Auto-reply enviado a", form.email);
+        }
+      } catch (emailErr) {
+        console.error("[EmailJS] Error de red:", emailErr);
+      }
       setStatus("success");
       onSuccess?.();
     } catch (err) {
-      setError(err?.response?.data?.error || err?.message || f.errorGeneric);
+      setError(err?.message || f.errorGeneric);
       setStatus("error");
     }
   };
@@ -51,9 +172,6 @@ function DemoForm({ t, onSuccess }) {
         <p className="text-ink-soft/60 text-[15px] leading-relaxed mb-6">
           {f.successDesc}
         </p>
-
-{/* Post-success actions */}
-{/* Post-success actions */}
         <div className="flex flex-col sm:flex-row gap-3 justify-center mb-5">
           <button
             type="button"
@@ -72,7 +190,6 @@ function DemoForm({ t, onSuccess }) {
             {t.finalCta.downloadOnePager}
           </button>
         </div>
-
         <p className="font-mono text-[11px] text-gray-400 tracking-wider">
           {f.successNote}
         </p>
@@ -91,18 +208,33 @@ function DemoForm({ t, onSuccess }) {
         {f.subtitle}
       </p>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-[13px] font-medium text-ink-soft mb-1.5">
-            {f.nameLabel}
-          </label>
-          <input
-            type="text"
-            value={form.name}
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
-            placeholder={f.namePlaceholder}
-            className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-indigo focus:ring-2 focus:ring-indigo/10 outline-none transition-all text-[15px] text-ink placeholder:text-gray-300"
-            disabled={status === "submitting"}
-          />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-[13px] font-medium text-ink-soft mb-1.5">
+              {f.nameLabel}
+            </label>
+            <input
+              type="text"
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              placeholder={f.namePlaceholder}
+              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-indigo focus:ring-2 focus:ring-indigo/10 outline-none transition-all text-[15px] text-ink placeholder:text-gray-300"
+              disabled={status === "submitting"}
+            />
+          </div>
+          <div>
+            <label className="block text-[13px] font-medium text-ink-soft mb-1.5">
+              {f.lastNameLabel}
+            </label>
+            <input
+              type="text"
+              value={form.lastName}
+              onChange={(e) => setForm({ ...form, lastName: e.target.value })}
+              placeholder={f.lastNamePlaceholder}
+              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-indigo focus:ring-2 focus:ring-indigo/10 outline-none transition-all text-[15px] text-ink placeholder:text-gray-300"
+              disabled={status === "submitting"}
+            />
+          </div>
         </div>
         <div>
           <label className="block text-[13px] font-medium text-ink-soft mb-1.5">
@@ -145,16 +277,73 @@ function DemoForm({ t, onSuccess }) {
             />
           )}
         </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-[13px] font-medium text-ink-soft mb-1.5">
+              {f.companyLabel}
+            </label>
+            <input
+              type="text"
+              value={form.company}
+              onChange={(e) => setForm({ ...form, company: e.target.value })}
+              placeholder={f.companyPlaceholder}
+              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-indigo focus:ring-2 focus:ring-indigo/10 outline-none transition-all text-[15px] text-ink placeholder:text-gray-300"
+              disabled={status === "submitting"}
+            />
+          </div>
+          <div>
+            <label className="block text-[13px] font-medium text-ink-soft mb-1.5">
+              {f.cityLabel} <span className="text-gray-300">{f.cityOptional}</span>
+            </label>
+            <input
+              type="text"
+              value={form.city}
+              onChange={(e) => setForm({ ...form, city: e.target.value })}
+              placeholder={f.cityPlaceholder}
+              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-indigo focus:ring-2 focus:ring-indigo/10 outline-none transition-all text-[15px] text-ink placeholder:text-gray-300"
+              disabled={status === "submitting"}
+            />
+          </div>
+        </div>
         <div>
           <label className="block text-[13px] font-medium text-ink-soft mb-1.5">
-            {f.companyLabel} <span className="text-gray-300">{f.companyOptional}</span>
+            {f.phoneLabel} <span className="text-gray-300">{f.phoneOptional}</span>
           </label>
-          <input
-            type="text"
-            value={form.company}
-            onChange={(e) => setForm({ ...form, company: e.target.value })}
-            placeholder={f.companyPlaceholder}
-            className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-indigo focus:ring-2 focus:ring-indigo/10 outline-none transition-all text-[15px] text-ink placeholder:text-gray-300"
+          <div className="flex gap-2">
+            <select
+              value={form.countryCode}
+              onChange={(e) => setForm({ ...form, countryCode: e.target.value })}
+              className="px-3 py-2.5 rounded-xl border border-gray-200 focus:border-indigo focus:ring-2 focus:ring-indigo/10 outline-none transition-all text-[15px] text-ink bg-white"
+              disabled={status === "submitting"}
+              style={{ maxWidth: "140px" }}
+            >
+              {COUNTRIES.map((c) => (
+                <option key={c.code} value={c.prefix}>
+                  {c.flag} {c.prefix}
+                </option>
+              ))}
+            </select>
+            <input
+              type="tel"
+              value={form.phone}
+              onChange={(e) => setForm({ ...form, phone: e.target.value })}
+              placeholder={f.phonePlaceholder}
+              className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 focus:border-indigo focus:ring-2 focus:ring-indigo/10 outline-none transition-all text-[15px] text-ink placeholder:text-gray-300"
+              disabled={status === "submitting"}
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-[13px] font-medium text-ink-soft mb-1.5">
+            Mensaje <span className="text-gray-300">(opcional)</span>
+          </label>
+          <textarea
+            rows={4}
+            value={form.message}
+            onChange={(e) => setForm({ ...form, message: e.target.value })}
+            placeholder="Cuentanos algo más si quieres (numero de sociedades, contexto dudas etc.)"
+            className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-indigo focus:ring-2 focus:ring-indigo/10 outline-none transition-all text-[15px] text-ink placeholder:text-gray-300 resize-none"
             disabled={status === "submitting"}
           />
         </div>
@@ -188,10 +377,10 @@ function DemoForm({ t, onSuccess }) {
   );
 }
 
-export default function FinalCTA() {
+export default function FinalCTA({ startWithForm = false }) {
   const { t } = useI18n();
   const fc = t.finalCta;
-  const [showForm, setShowForm] = useState(false);
+  const [showForm, setShowForm] = useState(startWithForm);
 
   return (
     <section id="demo" className="py-20 bg-cloud">
@@ -274,7 +463,7 @@ export default function FinalCTA() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.4 }}
-              className="max-w-xl mx-auto text-left"
+              className="max-w-3xl mx-auto text-left"
             >
               <DemoForm t={t} />
             </motion.div>

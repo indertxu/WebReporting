@@ -18,9 +18,7 @@ export default function PartnerStrip() {
           <div className="flex items-center gap-4">
             <div className="bg-white border border-gray-100 shadow-sm rounded-2xl px-6 py-4">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo to-cyan flex items-center justify-center text-white font-black text-xs">
-                  N
-                </div>
+                <img src="/favicon.svg" alt="Next Reporting" className="w-7 h-7 rounded-lg" />
                 <span className="text-ink font-bold text-lg tracking-tight">
                   Next Reporting
                 </span>

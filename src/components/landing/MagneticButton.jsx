@@ -1,7 +1,10 @@
 import React, { useRef, useState } from "react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
-export default function MagneticButton({ children, href, primary = true, className = "" }) {
+const MotionLink = motion(Link);
+
+export default function MagneticButton({ children, href, to, onClick, primary = true, className = "" }) {
   const ref = useRef(null);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
 
@@ -26,10 +29,28 @@ export default function MagneticButton({ children, href, primary = true, classNa
     ? "bg-ink text-white hover:bg-indigo shadow-lg shadow-indigo/20"
     : "bg-white text-ink border border-gray-200 hover:border-indigo hover:text-indigo";
 
+  if (to) {
+    return (
+      <MotionLink
+        ref={ref}
+        to={to}
+        onClick={onClick}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        animate={{ x: offset.x, y: offset.y }}
+        transition={{ type: "spring", stiffness: 300, damping: 18 }}
+        className={`${base} ${variant} ${className}`}
+      >
+        {children}
+      </MotionLink>
+    );
+  }
+
   return (
     <motion.a
       ref={ref}
       href={href}
+      onClick={onClick}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       animate={{ x: offset.x, y: offset.y }}

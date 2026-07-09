@@ -14,15 +14,13 @@ export default function Footer() {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-10 mb-16">
             <div className="col-span-2">
               <div className="flex items-center gap-2.5 mb-4">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo to-cyan flex items-center justify-center text-white font-black text-sm">
-                  N
-                </div>
+                <img src="/favicon.svg" alt="Next Reporting" className="w-9 h-9 rounded-lg" />
                 <div className="flex flex-col leading-none">
                   <span className="text-ink font-extrabold text-lg tracking-tight">
-                    Next Finance
+                    Next Reporting
                   </span>
                   <span className="font-mono text-[8px] tracking-[0.18em] uppercase text-gray-400 mt-0.5">
-                    Reporting & Analysis
+                    by Next Finance
                   </span>
                 </div>
               </div>
