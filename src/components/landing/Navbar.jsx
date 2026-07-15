@@ -19,6 +19,7 @@ export default function Navbar() {
     { label: t.nav.product, href: "/solucion", isRoute: true },
     { label: t.nav.howToUse, href: "/como-se-usa", isRoute: true },
     { label: t.nav.resources, href: "/recursos", isRoute: true },
+    { label: t.nav.about, href: "/nosotros", isRoute: true },
   ];
 
   useEffect(() => {

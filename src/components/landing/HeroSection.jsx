@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, BarChart3, GitMerge, SlidersVertical, FileText, Plug } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import MagneticButton from "./MagneticButton";
-import DashboardMockup from "./DashboardMockup";
 import { useI18n } from "@/lib/i18n";
 
 function ParallaxBlobs() {
@@ -53,21 +52,11 @@ export default function HeroSection() {
     { text: t.hero.chips.entities, color: "text-cyan", top: "88%", right: "4%", delay: 2.1 },
   ];
 
-  const FEATURE_PILLS = [
-    { icon: BarChart3, label: t.hero.pills.dashboards },
-    { icon: GitMerge, label: t.hero.pills.drillDowns },
-    { icon: SlidersVertical, label: t.hero.pills.kpiBuilder },
-    { icon: FileText, label: t.hero.pills.autoMemos },
-    { icon: Sparkles, label: t.hero.pills.aiAnalysis },
-    { icon: Plug, label: t.hero.pills.api },
-  ];
-
   return (
     <section className="relative pt-32 pb-20 overflow-hidden bg-cloud">
       <div className="absolute top-0 left-0 right-0 h-[55%] bg-gradient-to-b from-mint/5 to-transparent pointer-events-none" />
       <ParallaxBlobs />
 
-      {/* Floating chips */}
       <div className="absolute inset-0 pointer-events-none hidden lg:block">
         {FLOATING_CHIPS.map((chip, i) => (
           <motion.div
@@ -90,14 +79,13 @@ export default function HeroSection() {
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Left text */}
+        <div className="max-w-4xl mx-auto text-center">
           <div>
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="flex flex-wrap items-center gap-2 mb-8"
+              className="flex flex-wrap items-center gap-2 mb-8 justify-center"
             >
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-mint/30 bg-mint/5">
                 <span className="w-1.5 h-1.5 rounded-full bg-mint animate-pulse-glow" />
@@ -118,7 +106,7 @@ export default function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.7 }}
               className="font-extrabold text-ink leading-[1.0] tracking-[-0.035em] mb-6"
-              style={{ fontSize: "clamp(1.5rem, 3vw, 2.75rem)" }}
+              style={{ fontSize: "clamp(2rem, 4.5vw, 3.75rem)" }}
             >
               <span className="block">{t.hero.title1}</span>
               <span className="block">
@@ -129,20 +117,47 @@ export default function HeroSection() {
               </span>
             </motion.h1>
 
-            <motion.p
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="text-lg text-ink-soft/60 max-w-[520px] mb-8 leading-relaxed"
+              transition={{ delay: 0.35, duration: 0.6 }}
+              className="mb-7"
             >
-              {t.hero.desc}
-            </motion.p>
+              <p className="text-2xl md:text-3xl font-semibold text-ink leading-snug mb-3">
+                {t.hero.hookTitle1}{" "}
+                <span className="bg-gradient-to-r from-indigo to-mint bg-clip-text text-transparent">
+                  {t.hero.hookTitle2}
+                </span>
+              </p>
+              <p className="text-base md:text-lg text-ink-soft/70 mb-5 max-w-[620px] mx-auto">
+                {t.hero.hookDesc}
+              </p>
+
+              <div className="flex flex-wrap gap-2.5 justify-center">
+                <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white border border-mint/25 shadow-sm shadow-emerald-900/5">
+                  <span className="text-base font-bold text-mint">−80%</span>
+                  <span className="text-sm text-ink-soft font-medium">{t.hero.stats.time}</span>
+                </div>
+                <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white border border-mint/25 shadow-sm shadow-emerald-900/5">
+                  <span className="text-base font-bold text-mint">−60%</span>
+                  <span className="text-sm text-ink-soft font-medium">{t.hero.stats.cost}</span>
+                </div>
+                <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white border border-mint/25 shadow-sm shadow-emerald-900/5">
+                  <span className="text-base font-bold text-mint">10x</span>
+                  <span className="text-sm text-ink-soft font-medium">{t.hero.stats.speed}</span>
+                </div>
+                <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-mint/10 to-white border border-mint/30 shadow-sm shadow-emerald-900/5">
+                  <Sparkles size={14} className="text-indigo" />
+                  <span className="text-sm text-indigo font-semibold">{t.hero.stats.savings}</span>
+                </div>
+              </div>
+            </motion.div>
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="flex flex-wrap gap-3 mb-8"
+              className="flex flex-wrap gap-3 mb-8 justify-center"
             >
               <MagneticButton to="/solicitar-demo" primary onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
                 {t.hero.ctaPrimary}
@@ -151,36 +166,7 @@ export default function HeroSection() {
                 {t.hero.ctaSecondary}
               </MagneticButton>
             </motion.div>
-
-            {/* Feature pills */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
-              className="flex flex-wrap items-center gap-2"
-            >
-              {FEATURE_PILLS.map((pill) => (
-                <motion.div
-                  key={pill.label}
-                  whileHover={{ y: -2 }}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-mint/5 border border-mint/15 hover:border-mint/30 transition-colors"
-                >
-                  <pill.icon size={13} className="text-indigo" />
-                  <span className="text-xs text-ink-soft font-medium">{pill.label}</span>
-                </motion.div>
-              ))}
-            </motion.div>
           </div>
-
-          {/* Right dashboard */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 40 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
-            className="relative animate-float-soft"
-          >
-            <DashboardMockup />
-          </motion.div>
         </div>
       </div>
     </section>

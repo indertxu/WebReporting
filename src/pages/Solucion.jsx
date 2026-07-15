@@ -6,23 +6,7 @@ import { useI18n } from "@/lib/i18n";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
 
-const FEATURES = [
-  { icon: BarChart3, title: "Dashboards en tiempo real", desc: "KPIs vivos con Revenue, EBITDA, Net Result y cualquier indicador personalizado. Datos actualizados cada 5 minutos desde Konsolidator." },
-  { icon: GitMerge, title: "Drill-downs instantáneos", desc: "Del grupo consolidado a cada sociedad en un solo clic. Sin exportaciones, sin reprocesos, sin hojas intermedias." },
-  { icon: SlidersVertical, title: "KPI Builder visual", desc: "Constructor visual de KPIs sin código. Crea ratios, márgenes y métricas operativas con arrastrar y soltar." },
-  { icon: FileText, title: "Memorias automáticas", desc: "Comentarios narrativos generados por IA sobre cada variación de KPI. Board packs listos en minutos, no días." },
-  { icon: Sparkles, title: "IA en cada análisis", desc: "Detección automática de desviaciones y alertas inteligentes por umbral. La IA lee tus dashboards y explica las variaciones." },
-  { icon: Plug, title: "API & integraciones", desc: "Conexión nativa con Konsolidator y API universal para cualquier fuente de datos. Compatible con PGC, IFRS y US GAAP." },
-];
-
-const BENEFITS = [
-  "Del cierre al insight en 2.5 días en vez de 14",
-  "Board packs listos en la misma tarde",
-  "Trazabilidad completa: del KPI al asiento original",
-  "Multi-idioma: ES · PT · EN · DA",
-  "Multi-moneda y multi-entidad de serie",
-  "Sin instalación: 100% cloud, acceso desde cualquier dispositivo",
-];
+const FEATURE_ICONS = [BarChart3, GitMerge, SlidersVertical, FileText, Sparkles, Plug];
 
 export default function Solucion() {
   const { t } = useI18n();
@@ -38,30 +22,26 @@ export default function Solucion() {
             className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-indigo transition-colors mb-8"
           >
             <ArrowLeft size={16} />
-            Volver al inicio
+            {t.solucion.backToHome}
           </Link>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-mint/30 bg-white mb-6">
               <Sparkles size={12} className="text-indigo" />
               <span className="text-xs text-indigo font-semibold tracking-wide uppercase">
-                La solución
+                {t.solucion.badge}
               </span>
             </div>
 
             <h1 className="font-extrabold text-4xl md:text-6xl text-ink leading-[1.05] tracking-tight mb-6">
-              Consolidación lista.{" "}
+              {t.solucion.title1}{" "}
               <span className="bg-gradient-to-r from-indigo to-mint bg-clip-text text-transparent">
-                Ahora, el insight.
+                {t.solucion.titleHighlight}
               </span>
             </h1>
 
             <p className="text-lg md:text-xl text-ink-soft/70 leading-relaxed max-w-3xl">
-              Next Reporting es la capa de reporting e IA que se conecta sobre tu plataforma de consolidación. Convertimos datos ya consolidados en KPIs vivos, análisis por dimensión y board packs listos para dirección — con IA integrada, en tiempo real.
+              {t.solucion.desc}
             </p>
           </motion.div>
 
@@ -72,25 +52,28 @@ export default function Solucion() {
             className="mt-16"
           >
             <h2 className="font-bold text-2xl md:text-3xl text-ink mb-8">
-              Todo lo que necesita tu equipo financiero
+              {t.solucion.featuresTitle}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {FEATURES.map((f, i) => (
-                <div
-                  key={i}
-                  className="bg-white border border-mint/15 rounded-2xl p-6 hover:border-indigo/40 hover:shadow-lg transition-all"
-                >
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 rounded-xl bg-mint/10 flex items-center justify-center">
-                      <f.icon size={18} className="text-indigo" />
+              {t.solucion.features.map((f, i) => {
+                const Icon = FEATURE_ICONS[i];
+                return (
+                  <div
+                    key={i}
+                    className="bg-white border border-mint/15 rounded-2xl p-6 hover:border-indigo/40 hover:shadow-lg transition-all"
+                  >
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-10 h-10 rounded-xl bg-mint/10 flex items-center justify-center">
+                        <Icon size={18} className="text-indigo" />
+                      </div>
+                      <h3 className="font-bold text-ink text-[17px]">{f.title}</h3>
                     </div>
-                    <h3 className="font-bold text-ink text-[17px]">{f.title}</h3>
+                    <p className="text-[14px] text-ink-soft/70 leading-relaxed">
+                      {f.desc}
+                    </p>
                   </div>
-                  <p className="text-[14px] text-ink-soft/70 leading-relaxed">
-                    {f.desc}
-                  </p>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </motion.div>
 
@@ -101,10 +84,10 @@ export default function Solucion() {
             className="mt-20 bg-white border border-mint/15 rounded-3xl p-8 md:p-12"
           >
             <h2 className="font-bold text-2xl md:text-3xl text-ink mb-8">
-              Por qué elegir Next Reporting
+              {t.solucion.benefitsTitle}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {BENEFITS.map((b, i) => (
+              {t.solucion.benefits.map((b, i) => (
                 <div key={i} className="flex items-start gap-3">
                   <CheckCircle2 size={20} className="text-mint shrink-0 mt-0.5" />
                   <span className="text-ink-soft text-[15px] leading-relaxed">{b}</span>
@@ -120,16 +103,16 @@ export default function Solucion() {
             className="mt-20 bg-gradient-to-br from-indigo to-mint rounded-3xl p-10 md:p-16 text-center"
           >
             <h2 className="font-extrabold text-3xl md:text-4xl text-white mb-4">
-              Solicita tu demo
+              {t.solucion.ctaTitle}
             </h2>
             <p className="text-white/90 text-lg mb-8 max-w-xl mx-auto">
-              30 minutos. Sin compromiso. Con tus datos reales.
+              {t.solucion.ctaDesc}
             </p>
             <Link
               to="/#demo"
               className="inline-flex items-center gap-2 bg-white text-indigo font-bold text-lg px-8 py-4 rounded-xl hover:bg-white/90 transition-all shadow-xl"
             >
-              Solicitar demo →
+              {t.solucion.ctaButton}
             </Link>
           </motion.div>
         </div>

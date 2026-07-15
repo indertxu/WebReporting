@@ -32,7 +32,7 @@ function buildAutoReplyHtml(name) {
     '<table width="640" cellpadding="0" cellspacing="0" style="max-width:640px;background:#ffffff;border-radius:8px;overflow:hidden;border:1px solid #e2e8f0;">',
     '<tr><td style="background:#ffffff;padding:28px 44px;border-bottom:2px solid #f1f5f9;">',
     '<table cellpadding="0" cellspacing="0" border="0"><tr>',
-    '<td style="padding-right:14px;vertical-align:middle;"><img src="https://i.postimg.cc/RVZ7kfXx/Captura-de-pantalla-2026-07-08-115450.png" alt="Next Reporting" width="80" style="display:block;border:0;height:auto;max-width:80px;max-height:80px;width:auto;"/></td>',
+    '<td style="padding-right:14px;vertical-align:middle;"><img src="https://i.postimg.cc/hjXchPDC/logo-3.png" alt="Next Reporting" width="70" style="display:block;border:0;height:auto;max-width:60px;max-height:60px;width:auto;"/></td>',
     '<td style="vertical-align:middle;"><div style="font-size:22px;font-weight:bold;color:#059669;">Next Reporting</div>',
     '<div style="font-size:10px;letter-spacing:2px;color:#94a3b8;margin-top:4px;text-transform:uppercase;">By Next Finance</div></td>',
     '</tr></table></td></tr>',
@@ -45,7 +45,8 @@ function buildAutoReplyHtml(name) {
     '</td></tr>',
     '<tr><td style="padding:44px 44px 24px 44px;">',
     '<p style="font-size:16px;color:#0f172a;margin:0 0 20px 0;">Estimado/a <strong>' + name + '</strong>,</p>',
-    '<p style="font-size:14px;color:#334155;line-height:1.75;margin:0 0 18px 0;">Le confirmamos que hemos recibido su solicitud de demostración de <strong>Next Reporting</strong>. Nuestro departamento comercial procederá a revisar la información remitida y contactará con usted en un plazo máximo de <strong>24 horas laborables</strong> para coordinar la sesión.</p>',
+    '<p style="font-size:14px;color:#334155;line-height:1.75;margin:0 0 18px 0;">Gracias por reservar tu demo con <strong>Next Reporting</strong>. Estamos deseando conocerte y enseñarte de cerca cómo podemos hacer que tu reporting financiero deje de ser una carga y se convierta en una ventaja para tu equipo.</p>',
+    '<p style="font-size:14px;color:#334155;line-height:1.75;margin:0 0 18px 0;">Le confirmamos que hemos recibido su solicitud de demostración correctamente. Nuestro departamento comercial procederá a revisar la información remitida y contactará con usted en un plazo máximo de <strong>24 horas laborables</strong> para coordinar la sesión.</p>',
     '<p style="font-size:14px;color:#334155;line-height:1.75;margin:0 0 18px 0;">La demostración, de aproximadamente 30 minutos de duración, se adaptará específicamente al perfil de su organización y los requerimientos particulares de su función de reporting.</p>',
     '<div style="font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:2px;font-weight:bold;margin:32px 0 12px 0;">Detalles de la solicitud</div>',
     '<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top:1px solid #e2e8f0;margin:0 0 28px 0;">',
@@ -61,21 +62,25 @@ function buildAutoReplyHtml(name) {
     '<p style="font-size:14px;color:#334155;line-height:1.7;margin:24px 0 6px 0;">Para cualquier consulta previa o aclaración adicional, puede responder directamente a este correo electrónico.</p>',
     '<p style="font-size:14px;color:#334155;line-height:1.7;margin:24px 0 6px 0;">Agradecemos su interés en Next Reporting y quedamos a su entera disposición.</p>',
     '<div style="margin:28px 0 0 0;padding:20px 0 0 0;border-top:1px solid #e2e8f0;">',
-    '<div style="font-size:14px;color:#0f172a;font-weight:bold;">Departamento Comercial</div>',
-    '<div style="font-size:12px;color:#64748b;margin-top:4px;">Next Reporting - By Next Finance</div>',
+    '<div style="font-size:14px;color:#0f172a;font-weight:bold;">Información de contacto</div>',
+    '<div style="font-size:12px;color:#64748b;margin-top:4px;">Para cualquier consulta escríbanos a <a href="mailto:info@atebiz.com" style="color:#059669;text-decoration:none;font-weight:bold;">info@atebiz.com</a></div>',
     '</div></td></tr>',
     '<tr><td style="background:#0f172a;padding:28px 44px;">',
+    '<table cellpadding="0" cellspacing="0" border="0"><tr>',
+    '<td style="padding-right:16px;vertical-align:middle;"><img src="https://i.postimg.cc/hjXchPDC/logo-3.png" alt="Next Reporting" width="54" style="display:block;border:0;height:auto;max-width:54px;max-height:54px;width:auto;"/></td>',
+    '<td style="vertical-align:middle;">',
     '<div style="font-size:11px;color:#ffffff;font-weight:bold;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">Next Reporting - By Next Finance</div>',
     '<div style="font-size:11px;color:#94a3b8;margin-bottom:3px;">Reporting and Analysis - Consolidacion y Analisis Financiero</div>',
     '<div style="font-size:11px;color:#94a3b8;margin-bottom:3px;">Madrid - Copenhague</div>',
     '<div style="font-size:11px;color:#94a3b8;">Idiomas: ES - PT - EN - DA</div>',
+    '</td></tr></table>',
     '</td></tr>',
     '</table></td></tr></table></body></html>'
   ].join('');
   return html;
 }
 
-function DemoForm({ t, onSuccess }) {
+export function DemoForm({ t, onSuccess }) {
   const f = t.finalCta.form;
   const [form, setForm] = useState({ name: "", lastName: "", email: "", role: "", company: "", city: "", countryCode: "+34", phone: "", message: "" });
   const [customRole, setCustomRole] = useState("");
@@ -201,13 +206,13 @@ function DemoForm({ t, onSuccess }) {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-2xl border border-mint/15 p-8 shadow-[0_20px_60px_-15px_rgba(6,78,59,0.15)]"
+      className="bg-white rounded-2xl border border-mint/15 p-6 shadow-[0_20px_60px_-15px_rgba(6,78,59,0.15)]"
     >
-      <h3 className="text-ink font-bold text-xl mb-1">{f.title}</h3>
-      <p className="text-ink-soft/50 text-[14px] mb-6">
+      <h3 className="text-ink font-bold text-lg mb-1">{f.title}</h3>
+      <p className="text-ink-soft/50 text-[13px] mb-4">
         {f.subtitle}
       </p>
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-3">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-[13px] font-medium text-ink-soft mb-1.5">
@@ -339,7 +344,7 @@ function DemoForm({ t, onSuccess }) {
             Mensaje <span className="text-gray-300">(opcional)</span>
           </label>
           <textarea
-            rows={4}
+            rows={2}
             value={form.message}
             onChange={(e) => setForm({ ...form, message: e.target.value })}
             placeholder="Cuentanos algo más si quieres (numero de sociedades, contexto dudas etc.)"

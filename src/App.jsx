@@ -13,6 +13,7 @@ import Solucion from './pages/Solucion';
 import Recursos from './pages/Recursos';
 import SolicitarDemo from './pages/SolicitarDemo';
 import ComoSeUsa from './pages/ComoSeUsa';
+import Nosotros from './pages/Nosotros';
 import ConsentNotice from './components/landing/ConsentNotice';
 // Add page imports here
 
@@ -47,6 +48,7 @@ const AuthenticatedApp = () => {
       <Route path="/recursos" element={<Recursos />} />
       <Route path="/solicitar-demo" element={<SolicitarDemo />} />
       <Route path="/como-se-usa" element={<ComoSeUsa />} />
+      <Route path="/nosotros" element={<Nosotros />} />
       <Route path="/one-pager" element={<OnePager />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
