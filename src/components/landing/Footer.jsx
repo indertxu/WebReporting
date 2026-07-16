@@ -44,53 +44,58 @@ export default function Footer() {
               </div>
             </div>
 
-            {ft.columns.map((col, i) => (
-              <div key={i}>
-                <h4 className="font-mono text-[10px] tracking-[0.14em] uppercase text-gray-400 mb-5 font-medium">
-                  {col.title}
-                </h4>
-                <ul className="space-y-2.5">
-                  {col.links.map((link, idx) => {
-                    if (link.type === "mail") {
+            {[0, 1, 3, 2].map((colIdx) => {
+              const col = ft.columns[colIdx];
+              if (!col) return null;
+              const isEmpresa = colIdx === 2;
+              return (
+                <div key={colIdx} className={isEmpresa ? "md:text-right" : ""}>
+                  <h4 className="font-mono text-[12px] tracking-[0.14em] uppercase mb-5 text-indigo font-bold">
+                    {col.title}
+                  </h4>
+                  <ul className={isEmpresa ? "space-y-2" : "space-y-2.5"}>
+                    {col.links.map((link, idx) => {
+                      if (link.type === "mail") {
+                        return (
+                          <li key={idx}>
+                            <button
+                              type="button"
+                              onClick={() => window.location.href = `mailto:${link.email}`}
+                              className="text-[14px] text-gray-500 hover:text-indigo transition-colors text-left md:text-right"
+                            >
+                              {link.label}{isEmpresa && <span className="ml-1 text-indigo underline underline-offset-2 font-medium">(click here)</span>}
+                            </button>
+                          </li>
+                        );
+                      }
+                      if (link.type === "modal") {
+                        return (
+                          <li key={idx}>
+                            <button
+                              type="button"
+                              onClick={() => setOpenModal(link.modal)}
+                              className="text-[14px] text-gray-500 hover:text-indigo transition-colors text-left"
+                            >
+                              {link.label}
+                            </button>
+                          </li>
+                        );
+                      }
                       return (
                         <li key={idx}>
                           <button
                             type="button"
-                            onClick={() => window.location.href = `mailto:${link.email}`}
                             className="text-[14px] text-gray-500 hover:text-indigo transition-colors text-left"
                           >
-                            {link.label}
+                            {link.label ?? link}
                           </button>
                         </li>
                       );
-                    }
-                    if (link.type === "modal") {
-                      return (
-                        <li key={idx}>
-                          <button
-                            type="button"
-                            onClick={() => setOpenModal(link.modal)}
-                            className="text-[14px] text-gray-500 hover:text-indigo transition-colors text-left"
-                          >
-                            {link.label}
-                          </button>
-                        </li>
-                      );
-                    }
-                    return (
-                      <li key={idx}>
-                        <button
-                          type="button"
-                          className="text-[14px] text-gray-500 hover:text-indigo transition-colors text-left"
-                        >
-                          {link.label ?? link}
-                        </button>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            ))}
+                    })}
+                  </ul>
+                </div>
+              );
+            })}
           </div>
 
           <div className="pt-8 border-t border-gray-100 flex flex-col sm:flex-row justify-between font-mono text-[11px] text-gray-300 tracking-wider gap-2">

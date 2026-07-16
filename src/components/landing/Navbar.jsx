@@ -73,7 +73,7 @@ export default function Navbar() {
                     if (el) el.scrollIntoView({ behavior: "smooth" });
                   }
                 }}
-                className="text-sm text-gray-500 hover:text-indigo transition-colors font-medium"
+                className="text-base text-gray-800 hover:text-indigo transition-colors font-bold"
               >
                 {l.label}
               </button>

@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import DashboardMockup from "./DashboardMockup";
+
 import TiltCard from "./TiltCard";
 import { useI18n } from "@/lib/i18n";
 
@@ -24,7 +24,11 @@ export default function ProductShowcase() {
             className="order-2 lg:order-1"
           >
             <TiltCard intensity={4}>
-              <DashboardMockup />
+              <img
+                src="/showcase.png"
+                alt="Next Reporting dashboard"
+                className="w-full h-auto rounded-2xl shadow-[0_30px_80px_-20px_rgba(6,78,59,0.18)] border border-mint/15"
+              />
             </TiltCard>
           </motion.div>
 
