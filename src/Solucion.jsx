@@ -36,7 +36,7 @@ export default function Solucion() {
           {/* Back link */}
           <Link
             to="/"
-            className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-indigo transition-colors mb-8"
+            className="inline-flex items-center gap-2 text-base text-gray-700 hover:text-indigo transition-colors mb-8 font-semibold"
           >
             <ArrowLeft size={16} />
             Volver al inicio

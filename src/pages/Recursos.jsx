@@ -55,13 +55,7 @@ export default function Recursos() {
 
       <div className="pt-32 pb-20 px-6">
         <div className="max-w-5xl mx-auto">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-indigo transition-colors mb-8"
-          >
-            <ArrowLeft size={16} />
-            {t.recursos.backToHome}
-          </Link>
+
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-mint/30 bg-white mb-6">
@@ -239,23 +233,23 @@ export default function Recursos() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.6 }}
-            className="mt-20 bg-ink rounded-3xl p-10 md:p-16 text-center border border-mint/20 shadow-2xl"
+            className="mt-16 bg-ink rounded-2xl p-8 md:p-10 text-center max-w-3xl mx-auto"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-mint/30 bg-mint/10 mb-6">
-              <span className="text-[11px] text-mint font-semibold tracking-[0.15em] uppercase">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-mint/40 mb-4">
+              <span className="text-[11px] text-mint font-semibold tracking-wider uppercase">
                 {t.recursos.ctaBadge}
               </span>
             </div>
-            <h2 className="font-extrabold text-3xl md:text-4xl text-white mb-4 tracking-tight leading-tight">
-              {t.recursos.ctaTitle}
+            <h2 className="font-bold text-2xl md:text-3xl text-white mb-3">
+              ¿Prefiere una demostración en vivo?
             </h2>
-            <p className="text-white/60 text-base md:text-lg mb-10 max-w-xl mx-auto leading-relaxed">
+            <p className="text-white/70 text-[15px] mb-6 max-w-lg mx-auto">
               {t.recursos.ctaDesc}
             </p>
             <Link
               to="/solicitar-demo"
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="inline-flex items-center gap-2 bg-white text-ink font-semibold text-[15px] px-7 py-3.5 rounded-lg hover:bg-mint hover:text-ink transition-all shadow-lg"
+              className="inline-flex items-center gap-2 bg-white text-ink font-bold text-[15px] px-6 py-3 rounded-xl hover:bg-mint/20 transition-all"
             >
               {t.recursos.ctaButton}
             </Link>

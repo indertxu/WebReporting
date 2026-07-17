@@ -470,6 +470,13 @@ export default function FinalCTA({ startWithForm = false }) {
               transition={{ duration: 0.4 }}
               className="max-w-3xl mx-auto text-left"
             >
+              <button
+                type="button"
+                onClick={() => setShowForm(false)}
+                className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-indigo transition-colors mb-4 font-semibold"
+              >
+                ← Volver
+              </button>
               <DemoForm t={t} />
             </motion.div>
           )}

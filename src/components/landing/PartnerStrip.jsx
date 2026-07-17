@@ -26,9 +26,12 @@ export default function PartnerStrip() {
             </div>
             <span className="text-gray-300 text-3xl font-light">+</span>
             <div className="bg-white border border-gray-100 shadow-sm rounded-2xl px-6 py-4">
-              <span className="text-ink font-bold text-lg tracking-tight">
-                konsolidator.
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="w-7 h-7 rounded-lg bg-[#1a1aff] flex items-center justify-center text-white font-black text-sm">K</span>
+                <span className="text-ink font-bold text-lg tracking-tight">
+                  konsolidator.
+                </span>
+              </div>
             </div>
           </div>
 

@@ -17,15 +17,7 @@ export default function Nosotros() {
       <Navbar />
 
       <section className="pt-32 pb-16 bg-gradient-to-b from-white to-cloud">
-        <div className="max-w-5xl mx-auto px-6 mb-8">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-indigo transition-colors"
-          >
-            <ArrowLeft size={16} />
-            {t.solucion.backToHome}
-          </Link>
-        </div>
+       
         <div className="max-w-5xl mx-auto px-6 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <div className="flex items-center justify-center gap-3 font-mono text-[11px] tracking-[0.14em] uppercase text-indigo mb-6">
@@ -49,32 +41,20 @@ export default function Nosotros() {
         </div>
       </section>
 
-      <section className="py-16">
-        <div className="max-w-5xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <div className="font-mono text-[11px] tracking-[0.14em] uppercase text-indigo mb-4">
-              {t.nosotros.missionTag}
-            </div>
-            <h2 className="text-3xl font-extrabold text-ink mb-5 tracking-tight leading-tight">
-              {t.nosotros.missionTitle}
-            </h2>
-            <p className="text-ink-soft/70 leading-relaxed mb-4">
-              {t.nosotros.missionP1}
-            </p>
-            <p className="text-ink-soft/70 leading-relaxed">
-              {t.nosotros.missionP2}
-            </p>
+      <section className="py-20">
+        <div className="max-w-3xl mx-auto px-6 text-center">
+          <div className="font-mono text-[11px] tracking-[0.14em] uppercase text-indigo mb-4">
+            {t.nosotros.missionTag}
           </div>
-          <div className="bg-white rounded-2xl border border-mint/15 p-8 shadow-xl">
-            <div className="grid grid-cols-2 gap-6">
-              {t.nosotros.stats.map((s, i) => (
-                <div key={i}>
-                  <div className="text-3xl font-extrabold text-ink mb-1">{s.value}</div>
-                  <div className="text-[12px] text-ink-soft/60 leading-tight">{s.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
+          <h2 className="text-4xl md:text-5xl font-extrabold text-ink mb-8 tracking-tight leading-tight">
+            {t.nosotros.missionTitle}
+          </h2>
+          <p className="text-lg text-ink-soft/70 leading-relaxed mb-5">
+            {t.nosotros.missionP1}
+          </p>
+          <p className="text-lg text-ink-soft/70 leading-relaxed">
+            {t.nosotros.missionP2}
+          </p>
         </div>
       </section>
 
@@ -112,36 +92,17 @@ export default function Nosotros() {
         </div>
       </section>
 
-      <section className="py-16">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <div className="font-mono text-[11px] tracking-[0.14em] uppercase text-indigo mb-4">
-              {t.nosotros.teamTag}
-            </div>
-            <h2 className="text-3xl font-extrabold text-ink tracking-tight mb-4">
-              {t.nosotros.teamTitle}
-            </h2>
-            <p className="text-ink-soft/70 max-w-2xl mx-auto leading-relaxed">
-              {t.nosotros.teamDesc}
-            </p>
+      <section className="py-20">
+        <div className="max-w-5xl mx-auto px-6 text-center">
+          <div className="font-mono text-[11px] tracking-[0.14em] uppercase text-indigo mb-4">
+            {t.nosotros.teamTag}
           </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            {t.nosotros.teams.map((team, i) => {
-              const Icon = TEAM_ICONS[i];
-              return (
-                <div
-                  key={i}
-                  className="bg-white rounded-2xl p-7 border border-mint/15 shadow-lg hover:border-indigo/30 transition-all"
-                >
-                  <div className="w-12 h-12 rounded-xl bg-mint/15 flex items-center justify-center mb-5">
-                    <Icon size={22} className="text-indigo" />
-                  </div>
-                  <h3 className="text-ink font-bold text-lg mb-2">{team.name}</h3>
-                  <p className="text-ink-soft/70 text-[14px] leading-relaxed">{team.desc}</p>
-                </div>
-              );
-            })}
-          </div>
+          <h2 className="text-4xl md:text-5xl font-extrabold text-ink tracking-tight mb-8 leading-tight">
+            {t.nosotros.teamTitle}
+          </h2>
+          <p className="text-lg text-ink-soft/70 leading-[2]">
+            {t.nosotros.teamDesc}
+          </p>
         </div>
       </section>
 
@@ -156,7 +117,25 @@ export default function Nosotros() {
             </h2>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="bg-cloud rounded-2xl border border-mint/15 p-8 shadow-lg">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-11 h-11 rounded-xl bg-indigo/10 flex items-center justify-center">
+                  <MapPin size={20} className="text-indigo" />
+                </div>
+                <div>
+                  <div className="text-ink font-bold text-lg">{t.nosotros.valenciaTitle}</div>
+                  <div className="text-[12px] text-ink-soft/60 font-mono uppercase tracking-wider">{t.nosotros.valenciaSubtitle}</div>
+                </div>
+              </div>
+              <p className="text-ink-soft/70 text-[14px] leading-relaxed mb-3">
+                {t.nosotros.valenciaDesc}
+              </p>
+              <div className="text-[13px] text-ink-soft/70 font-mono">
+                {t.nosotros.valenciaCity}
+              </div>
+            </div>
+
             <div className="bg-cloud rounded-2xl border border-mint/15 p-8 shadow-lg">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-11 h-11 rounded-xl bg-indigo/10 flex items-center justify-center">

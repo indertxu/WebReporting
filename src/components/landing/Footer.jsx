@@ -74,9 +74,10 @@ export default function Footer() {
                             <button
                               type="button"
                               onClick={() => setOpenModal(link.modal)}
-                              className="text-[14px] text-gray-500 hover:text-indigo transition-colors text-left"
+                              className="group inline-flex items-center gap-1.5 text-[14px] text-gray-500 hover:text-indigo transition-colors text-left whitespace-nowrap"
                             >
                               {link.label}
+                              <svg className="w-3 h-3 text-indigo opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
                             </button>
                           </li>
                         );

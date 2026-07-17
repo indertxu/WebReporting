@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Sparkles, LineChart, GitMerge, Users, Zap, Shield, Layers, Clock, TrendingUp, FileCheck, Bell, Database, Target } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useI18n } from "@/lib/i18n";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
@@ -14,8 +14,14 @@ const CAPABILITY_ICONS = {
 
 export default function ComoSeUsa() {
   const { t } = useI18n();
-  const [activeRole, setActiveRole] = useState("cfo");
+  const { roleId } = useParams();
+  const [activeRole, setActiveRole] = useState(roleId || "cfo");
   const role = t.comoSeUsa.roles.find((r) => r.id === activeRole);
+  const hideTabs = !!roleId;
+
+  useEffect(() => {
+    if (roleId) setActiveRole(roleId);
+  }, [roleId]);
 
   return (
     <div className="min-h-screen bg-cloud">
@@ -23,13 +29,7 @@ export default function ComoSeUsa() {
 
       <div className="pt-32 pb-20 px-6">
         <div className="max-w-6xl mx-auto">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-indigo transition-colors mb-8"
-          >
-            <ArrowLeft size={16} />
-            {t.comoSeUsa.backToHome}
-          </Link>
+      
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-mint/30 bg-white mb-6">
@@ -51,22 +51,24 @@ export default function ComoSeUsa() {
             </p>
           </motion.div>
 
-          <div className="mt-16 flex flex-col sm:flex-row gap-3 border-b border-gray-200">
-            {t.comoSeUsa.roles.map((r) => (
-              <button
-                key={r.id}
-                onClick={() => setActiveRole(r.id)}
-                className={`px-6 py-4 font-semibold text-[15px] transition-all relative ${
-                  activeRole === r.id ? "text-indigo" : "text-gray-500 hover:text-ink"
-                }`}
-              >
-                {r.label}
-                {activeRole === r.id && (
-                  <motion.div layoutId="tab-underline" className="absolute bottom-[-1px] left-0 right-0 h-[2px] bg-indigo" />
-                )}
-              </button>
-            ))}
-          </div>
+          {!hideTabs && (
+            <div className="mt-16 flex flex-col sm:flex-row gap-3 border-b border-gray-200">
+              {t.comoSeUsa.roles.map((r) => (
+                <button
+                  key={r.id}
+                  onClick={() => setActiveRole(r.id)}
+                  className={`px-6 py-4 font-semibold text-[15px] transition-all relative ${
+                    activeRole === r.id ? "text-indigo" : "text-gray-500 hover:text-ink"
+                  }`}
+                >
+                  {r.label}
+                  {activeRole === r.id && (
+                    <motion.div layoutId="tab-underline" className="absolute bottom-[-1px] left-0 right-0 h-[2px] bg-indigo" />
+                  )}
+                </button>
+              ))}
+            </div>
+          )}
 
           <AnimatePresence mode="wait">
             <motion.div
@@ -140,23 +142,23 @@ export default function ComoSeUsa() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="bg-ink rounded-3xl p-10 md:p-16 text-center border border-mint/20 shadow-2xl"
+            className="mt-16 bg-ink rounded-2xl p-8 md:p-10 text-center max-w-3xl mx-auto"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-mint/30 bg-mint/10 mb-6">
-              <span className="text-[11px] text-mint font-semibold tracking-[0.15em] uppercase">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-mint/40 mb-4">
+              <span className="text-[11px] text-mint font-semibold tracking-wider uppercase">
                 {t.comoSeUsa.ctaBadge}
               </span>
             </div>
-            <h2 className="font-extrabold text-3xl md:text-4xl text-white mb-4 tracking-tight leading-tight">
-              {t.comoSeUsa.ctaTitle}
+            <h2 className="font-bold text-2xl md:text-3xl text-white mb-3">
+              ¿Quiere verlo con sus datos?
             </h2>
-            <p className="text-white/60 text-base md:text-lg mb-10 max-w-xl mx-auto leading-relaxed">
+            <p className="text-white/70 text-[15px] mb-6 max-w-lg mx-auto">
               {t.comoSeUsa.ctaDesc}
             </p>
             <Link
               to="/solicitar-demo"
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="inline-flex items-center gap-2 bg-white text-ink font-semibold text-[15px] px-7 py-3.5 rounded-lg hover:bg-mint hover:text-ink transition-all shadow-lg"
+              className="inline-flex items-center gap-2 bg-white text-ink font-bold text-[15px] px-6 py-3 rounded-xl hover:bg-mint/20 transition-all"
             >
               {t.comoSeUsa.ctaButton}
             </Link>

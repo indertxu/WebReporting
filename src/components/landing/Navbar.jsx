@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 import MagneticButton from "./MagneticButton";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useI18n } from "@/lib/i18n";
@@ -12,12 +12,21 @@ export default function Navbar() {
   const { t } = useI18n();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [casosOpen, setCasosOpen] = useState(false);
 
   const navigate = useNavigate();
 
   const NAV_LINKS = [
     { label: t.nav.product, href: "/solucion", isRoute: true },
-    { label: t.nav.howToUse, href: "/como-se-usa", isRoute: true },
+    {
+      label: t.nav.howToUse,
+      isDropdown: true,
+      children: [
+        { label: "CFO", href: "/casos/cfo" },
+        { label: "Controller", href: "/casos/controller" },
+        { label: "Consultor", href: "/casos/consultor" },
+      ],
+    },
     { label: t.nav.resources, href: "/recursos", isRoute: true },
     { label: t.nav.about, href: "/nosotros", isRoute: true },
   ];
@@ -42,8 +51,8 @@ export default function Navbar() {
       <div className="flex items-center justify-between h-[68px] pl-6 pr-6 lg:pr-10">
         <div className="max-w-7xl w-full mx-auto flex items-center justify-between">
           {/* Brand */}
-          <button
-            type="button"
+          <Link
+            to="/"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             className="flex items-center gap-2.5"
           >
@@ -56,28 +65,76 @@ export default function Navbar() {
                 {t.nav.byNextFinance}
               </span>
             </div>
-          </button>
+          </Link>
 
           {/* Desktop links */}
           <div className="hidden lg:flex items-center gap-7">
-            {NAV_LINKS.map((l) => (
-              <button
-                key={l.href}
-                type="button"
-                onClick={() => {
-                  if (l.isRoute) {
-                    navigate(l.href);
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                  } else {
-                    const el = document.querySelector(l.href);
-                    if (el) el.scrollIntoView({ behavior: "smooth" });
-                  }
-                }}
-                className="text-base text-gray-800 hover:text-indigo transition-colors font-bold"
-              >
-                {l.label}
-              </button>
-            ))}
+            {NAV_LINKS.map((l) => {
+              if (l.isDropdown) {
+                return (
+                  <div
+                    key={l.label}
+                    className="relative"
+                    onMouseEnter={() => setCasosOpen(true)}
+                    onMouseLeave={() => setCasosOpen(false)}
+                  >
+                    <button
+                      type="button"
+                      className="flex items-center gap-1 text-base text-gray-800 hover:text-indigo transition-colors font-bold"
+                    >
+                      {l.label}
+                      <ChevronDown size={16} className={`transition-transform ${casosOpen ? "rotate-180" : ""}`} />
+                    </button>
+                    <AnimatePresence>
+                      {casosOpen && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -8 }}
+                          transition={{ duration: 0.15 }}
+                          className="absolute top-full left-0 pt-2 min-w-[200px]"
+                        >
+                          <div className="bg-white rounded-xl shadow-xl border border-gray-100 py-2 overflow-hidden">
+                            {l.children.map((c) => (
+                              <button
+                                key={c.href}
+                                type="button"
+                                onClick={() => {
+                                  setCasosOpen(false);
+                                  navigate(c.href);
+                                  window.scrollTo({ top: 0, behavior: "smooth" });
+                                }}
+                                className="block w-full text-left px-4 py-2.5 text-[14px] font-semibold text-gray-700 hover:bg-cloud hover:text-indigo transition-colors"
+                              >
+                                {c.label}
+                              </button>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                );
+              }
+              return (
+                <button
+                  key={l.href}
+                  type="button"
+                  onClick={() => {
+                    if (l.isRoute) {
+                      navigate(l.href);
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    } else {
+                      const el = document.querySelector(l.href);
+                      if (el) el.scrollIntoView({ behavior: "smooth" });
+                    }
+                  }}
+                  className="text-base text-gray-800 hover:text-indigo transition-colors font-bold"
+                >
+                  {l.label}
+                </button>
+              );
+            })}
             <LanguageSwitcher />
             <MagneticButton
               to="/solicitar-demo"
@@ -121,25 +178,50 @@ export default function Navbar() {
             className="lg:hidden bg-white border-t border-gray-100 overflow-hidden"
           >
             <div className="px-6 py-6 space-y-4">
-              {NAV_LINKS.map((l) => (
-                <button
-                  key={l.href}
-                  type="button"
-                  onClick={() => {
-                    setMenuOpen(false);
-                    if (l.isRoute) {
-                      navigate(l.href);
-                      window.scrollTo({ top: 0, behavior: "smooth" });
-                    } else {
-                      const el = document.querySelector(l.href);
-                      if (el) el.scrollIntoView({ behavior: "smooth" });
-                    }
-                  }}
-                  className="block w-full text-left text-gray-600 hover:text-indigo text-base font-medium"
-                >
-                  {l.label}
-                </button>
-              ))}
+              {NAV_LINKS.map((l) => {
+                if (l.isDropdown) {
+                  return (
+                    <div key={l.label} className="space-y-2">
+                      <div className="text-gray-600 text-base font-medium">{l.label}</div>
+                      <div className="pl-4 space-y-2">
+                        {l.children.map((c) => (
+                          <button
+                            key={c.href}
+                            type="button"
+                            onClick={() => {
+                              setMenuOpen(false);
+                              navigate(c.href);
+                              window.scrollTo({ top: 0, behavior: "smooth" });
+                            }}
+                            className="block w-full text-left text-gray-500 hover:text-indigo text-[15px]"
+                          >
+                            {c.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                }
+                return (
+                  <button
+                    key={l.href}
+                    type="button"
+                    onClick={() => {
+                      setMenuOpen(false);
+                      if (l.isRoute) {
+                        navigate(l.href);
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                      } else {
+                        const el = document.querySelector(l.href);
+                        if (el) el.scrollIntoView({ behavior: "smooth" });
+                      }
+                    }}
+                    className="block w-full text-left text-gray-600 hover:text-indigo text-base font-medium"
+                  >
+                    {l.label}
+                  </button>
+                );
+              })}
               <button
                 type="button"
                 onClick={() => {

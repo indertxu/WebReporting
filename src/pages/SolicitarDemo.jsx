@@ -16,14 +16,7 @@ export default function SolicitarDemo() {
 
       <section className="flex-1 pt-24 pb-8 px-6">
         <div className="max-w-6xl mx-auto">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-indigo transition-colors mb-4"
-          >
-            <ArrowLeft size={16} />
-            Volver al inicio
-          </Link>
-
+      
           <div className="grid lg:grid-cols-2 gap-10 items-start">
             {/* IZQUIERDA: texto */}
             <div className="lg:sticky lg:top-28">

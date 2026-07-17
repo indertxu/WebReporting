@@ -48,6 +48,7 @@ const AuthenticatedApp = () => {
       <Route path="/recursos" element={<Recursos />} />
       <Route path="/solicitar-demo" element={<SolicitarDemo />} />
       <Route path="/como-se-usa" element={<ComoSeUsa />} />
+      <Route path="/casos/:roleId" element={<ComoSeUsa />} />
       <Route path="/nosotros" element={<Nosotros />} />
       <Route path="/one-pager" element={<OnePager />} />
       <Route path="*" element={<PageNotFound />} />

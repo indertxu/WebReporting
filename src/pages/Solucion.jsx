@@ -17,13 +17,7 @@ export default function Solucion() {
 
       <div className="pt-32 pb-20 px-6">
         <div className="max-w-5xl mx-auto">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-indigo transition-colors mb-8"
-          >
-            <ArrowLeft size={16} />
-            {t.solucion.backToHome}
-          </Link>
+
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-mint/30 bg-white mb-6">
@@ -100,17 +94,22 @@ export default function Solucion() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.6 }}
-            className="mt-20 bg-gradient-to-br from-indigo to-mint rounded-3xl p-10 md:p-16 text-center"
+            className="mt-16 bg-ink rounded-2xl p-8 md:p-10 text-center max-w-3xl mx-auto"
           >
-            <h2 className="font-extrabold text-3xl md:text-4xl text-white mb-4">
-              {t.solucion.ctaTitle}
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-mint/40 mb-4">
+              <span className="text-[11px] text-mint font-semibold tracking-wider uppercase">
+                Demo personalizada
+              </span>
+            </div>
+            <h2 className="font-bold text-2xl md:text-3xl text-white mb-3">
+              ¿Listo para dejar atrás el Excel?
             </h2>
-            <p className="text-white/90 text-lg mb-8 max-w-xl mx-auto">
+            <p className="text-white/70 text-[15px] mb-6 max-w-lg mx-auto">
               {t.solucion.ctaDesc}
             </p>
             <Link
-              to="/#demo"
-              className="inline-flex items-center gap-2 bg-white text-indigo font-bold text-lg px-8 py-4 rounded-xl hover:bg-white/90 transition-all shadow-xl"
+              to="/solicitar-demo"
+              className="inline-flex items-center gap-2 bg-white text-ink font-bold text-[15px] px-6 py-3 rounded-xl hover:bg-mint/20 transition-all"
             >
               {t.solucion.ctaButton}
             </Link>
