@@ -83,36 +83,46 @@ export default function LegalModal({ open, type, onClose }) {
             </div>
 
             <div className="overflow-y-auto px-8 py-6 space-y-5 text-[14.5px] text-ink-soft leading-relaxed">
-              {content.sections.map((section, i) => (
-                <div key={i}>
-                  {section.heading && (
-                    <h3 className="text-ink font-semibold text-[15px] mb-2">
-                      {section.heading}
-                    </h3>
-                  )}
-                  {section.body.split("\n\n").map((para, j) => (
-                    <p key={j} className="mb-2 last:mb-0">
-                      {para}
-                    </p>
+              <p className="text-[14px] text-ink-soft/75 mb-6 leading-relaxed">
+                Documentos legales oficiales de Next Reporting. Haz clic en cualquiera para abrirlo en PDF.
+              </p>
+              <div className="grid gap-2">
+                  {(type === "cookies"
+                    ? [
+                        { name: "Cookies Policy", file: "Nextreporting_Cookies Policy_Jun2026.pdf" },
+                      ]
+                    : [
+                        { name: "Terms and Conditions", file: "Nextreporting_Terms and Conditions_Jun2026.pdf" },
+                        { name: "SLA", file: "Nextreporting_SLA_Jun2026.pdf" },
+                        { name: "Professional Services Terms", file: "Nextreporting_Professional Services Terms_Jun2026.pdf" },
+                        { name: "Privacy Notice", file: "Nextreporting_Privacy Notice_Jun2026.pdf" },
+                        { name: "Information Security Policy", file: "Nextreporting_Information Security Policy_Jun2026.pdf" },
+                        { name: "DPA (Data Processing Agreement)", file: "Nextreporting_DPA_Jun2026.pdf" },
+                        { name: "White Label Software Distribution", file: "Nextreporting_White Label Software Distribution Agreement_Jun2026.pdf" },
+                      ]
+                  ).map((doc) => (
+                    <a
+                      key={doc.file}
+                      href={`/legal/${doc.file}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-between gap-3 px-4 py-3 bg-cloud hover:bg-mint/10 border border-gray-200 hover:border-indigo/40 rounded-xl transition-all group"
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-8 h-8 rounded-lg bg-indigo/10 flex items-center justify-center shrink-0">
+                          <Download size={14} className="text-indigo" />
+                        </div>
+                        <span className="text-[13px] text-ink font-semibold truncate group-hover:text-indigo transition-colors">
+                          {doc.name}
+                        </span>
+                      </div>
+                      <span className="text-[11px] font-mono text-gray-400 tracking-wider uppercase shrink-0">.pdf</span>
+                    </a>
                   ))}
-                </div>
-              ))}
-
-              {content.updated && (
-                <p className="font-mono text-[11px] text-gray-400 tracking-wider pt-4 border-t border-gray-100">
-                  {content.updated}
-                </p>
-              )}
+              </div>
             </div>
 
-            <div className="px-8 py-4 border-t border-gray-100 bg-gray-50/50 flex justify-end gap-3">
-              <button
-                onClick={handleDownload}
-                className="inline-flex items-center gap-2 bg-white border border-mint/40 hover:border-indigo text-ink hover:text-indigo font-semibold text-[13px] px-5 py-2.5 rounded-lg transition-colors"
-              >
-                <Download size={15} />
-                Descargar
-              </button>
+            <div className="px-8 py-4 border-t border-gray-100 bg-gray-50/50 flex justify-end">
               <button
                 onClick={onClose}
                 className="bg-ink hover:bg-indigo text-white font-semibold text-[13px] px-5 py-2.5 rounded-lg transition-colors"
