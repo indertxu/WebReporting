@@ -128,6 +128,25 @@ export function DemoForm({ t, onSuccess }) {
         throw new Error(data.message || f.errorGeneric);
       }
       try {
+        await fetch("https://script.google.com/macros/s/AKfycbw950BSOYt-BUOK5Ny8Sd0INGMXEHsQnuRqYACJWleGeY1WsYEkq_eB0HaNUVi0BDntYw/exec", {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: form.name,
+            lastName: form.lastName,
+            email: form.email,
+            company: form.company,
+            role: finalRole,
+            city: form.city,
+            phone: form.phone ? `${form.countryCode} ${form.phone}` : "",
+          }),
+        });
+        console.log("[GoogleSheets] Datos enviados");
+      } catch (sheetErr) {
+        console.error("[GoogleSheets] Error:", sheetErr);
+      }
+      try {
         const emailjsResponse = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -177,7 +196,7 @@ export function DemoForm({ t, onSuccess }) {
         <p className="text-ink-soft/60 text-[15px] leading-relaxed mb-6">
           {f.successDesc}
         </p>
-        <div className="flex flex-col sm:flex-row gap-3 justify-center mb-5">
+        <div className="flex justify-center mb-5">
           <button
             type="button"
             onClick={() => window.open("https://calendly.com/next-finance/demo", "_blank")}
@@ -185,14 +204,6 @@ export function DemoForm({ t, onSuccess }) {
           >
             <Calendar size={16} />
             {f.scheduleDemo}
-          </button>
-          <button
-            type="button"
-            onClick={() => window.location.href = "/one-pager"}
-            className="inline-flex items-center justify-center gap-2 bg-white border border-mint/20 hover:border-indigo text-ink hover:text-indigo font-semibold text-[14px] px-5 py-3 rounded-xl transition-all"
-          >
-            <Download size={16} />
-            {t.finalCta.downloadOnePager}
           </button>
         </div>
         <p className="font-mono text-[11px] text-gray-400 tracking-wider">

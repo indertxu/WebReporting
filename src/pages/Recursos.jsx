@@ -42,6 +42,7 @@ export default function Recursos() {
   const [activeSection, setActiveSection] = useState("preguntas");
   const [openFaq, setOpenFaq] = useState(0);
   const [activeVimeoId, setActiveVimeoId] = useState(null);
+  const [activeBlog, setActiveBlog] = useState(null);
 
   const SECTIONS = [
     { id: "preguntas", label: t.recursos.sections.preguntas, Icon: HelpCircle },
@@ -144,6 +145,7 @@ export default function Recursos() {
                     {t.recursos.blogs.map((b, i) => (
                       <article
                         key={i}
+                        onClick={() => setActiveBlog(b)}
                         className="bg-white border border-mint/15 rounded-2xl p-6 hover:border-indigo/40 hover:shadow-lg transition-all cursor-pointer group"
                       >
                         <div className="flex items-center gap-3 mb-4">
@@ -292,6 +294,73 @@ export default function Recursos() {
                 title="Webinar Next Reporting"
                 className="w-full h-full"
               />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {activeBlog && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setActiveBlog(null)}
+            className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-white rounded-2xl max-w-3xl w-full max-h-[85vh] overflow-hidden shadow-2xl flex flex-col"
+            >
+              <div className="flex items-start justify-between gap-4 px-8 py-5 border-b border-gray-100">
+                <div className="flex items-center gap-3 flex-wrap">
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-mint/10 text-[10px] font-semibold text-indigo tracking-wider uppercase">
+                    {activeBlog.tag}
+                  </span>
+                  <span className="text-[12px] text-gray-400">{activeBlog.date}</span>
+                  <span className="inline-flex items-center gap-1 text-[12px] text-gray-400">
+                    <Clock size={11} /> {activeBlog.readTime}
+                  </span>
+                </div>
+                <button
+                  onClick={() => setActiveBlog(null)}
+                  className="w-9 h-9 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors shrink-0"
+                >
+                  <X size={18} className="text-gray-500" />
+                </button>
+              </div>
+
+              <div className="overflow-y-auto px-8 py-6">
+                <h2 className="font-extrabold text-ink text-2xl md:text-3xl leading-tight mb-4">
+                  {activeBlog.title}
+                </h2>
+                <p className="text-[16px] text-ink-soft/80 leading-relaxed font-medium mb-6 border-l-4 border-indigo pl-4">
+                  {activeBlog.excerpt}
+                </p>
+                {activeBlog.content ? (
+                  activeBlog.content.split("\n\n").map((para, j) => (
+                    <p key={j} className="text-[15px] text-ink-soft/75 leading-relaxed mb-4">
+                      {para}
+                    </p>
+                  ))
+                ) : (
+                  <p className="text-[14px] text-gray-400 italic">
+                    (Contenido completo del artículo próximamente.)
+                  </p>
+                )}
+              </div>
+
+              <div className="px-8 py-4 border-t border-gray-100 bg-gray-50/50 flex justify-end">
+                <button
+                  onClick={() => setActiveBlog(null)}
+                  className="bg-ink hover:bg-indigo text-white font-semibold text-[13px] px-5 py-2.5 rounded-lg transition-colors"
+                >
+                  Cerrar
+                </button>
+              </div>
             </motion.div>
           </motion.div>
         )}

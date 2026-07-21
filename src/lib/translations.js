@@ -253,9 +253,10 @@ footer: {
           ],
         },
         {
-          title: "Empresa",
+          title: "Contacto",
           links: [
-            { type: "mail", label: "Contacto", email: "info@atebiz.com" },
+            { type: "mail", label: "Info", email: "info@atebiz.com" },
+            { type: "mail", label: "Ventas", email: "ventas@atebiz.com" },
           ],
         },
         {
@@ -1461,9 +1462,10 @@ footer: {
           ],
         },
         {
-          title: "Empresa",
+          title: "Contacto",
           links: [
-            { type: "mail", label: "Contacto", email: "info@atebiz.com" },
+            { type: "mail", label: "Info", email: "info@atebiz.com" },
+            { type: "mail", label: "Ventas", email: "ventas@atebiz.com" },
           ],
         },
         {
