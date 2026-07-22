@@ -243,7 +243,7 @@ export default function Recursos() {
               </span>
             </div>
             <h2 className="font-bold text-2xl md:text-3xl text-white mb-3">
-              ¿Prefiere una demostración en vivo?
+              {t.recursos.ctaTitle}
             </h2>
             <p className="text-white/70 text-[15px] mb-6 max-w-lg mx-auto">
               {t.recursos.ctaDesc}

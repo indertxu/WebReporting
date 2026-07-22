@@ -150,7 +150,7 @@ export default function ComoSeUsa() {
               </span>
             </div>
             <h2 className="font-bold text-2xl md:text-3xl text-white mb-3">
-              ¿Quiere verlo con sus datos?
+              {t.comoSeUsa.ctaTitle}
             </h2>
             <p className="text-white/70 text-[15px] mb-6 max-w-lg mx-auto">
               {t.comoSeUsa.ctaDesc}

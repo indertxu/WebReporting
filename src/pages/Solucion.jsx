@@ -98,11 +98,11 @@ export default function Solucion() {
           >
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-mint/40 mb-4">
               <span className="text-[11px] text-mint font-semibold tracking-wider uppercase">
-                Demo personalizada
+                {t.solucion.ctaBadge}
               </span>
             </div>
             <h2 className="font-bold text-2xl md:text-3xl text-white mb-3">
-              ¿Listo para dejar atrás el Excel?
+              {t.solucion.ctaTitle}
             </h2>
             <p className="text-white/70 text-[15px] mb-6 max-w-lg mx-auto">
               {t.solucion.ctaDesc}
