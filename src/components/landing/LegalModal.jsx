@@ -1,9 +1,63 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Download } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+
+/**
+ * Fila de documento legal con toggle ES/EN incrustado.
+ * Al pulsar ES abre la versión española (public/legal/es/), al pulsar EN la inglesa (public/legal/).
+ */
+function LegalDocRow({ name, file, hasEs = true }) {
+  const [lang, setLang] = useState(hasEs ? "es" : "en");
+  const href = lang === "es" ? `/legal/es/${file}` : `/legal/${file}`;
+  return (
+    <div className="flex items-center justify-between gap-3 px-4 py-3 bg-cloud hover:bg-mint/10 border border-gray-200 hover:border-indigo/40 rounded-xl transition-all group">
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center gap-3 min-w-0 flex-1"
+      >
+        <div className="w-8 h-8 rounded-lg bg-indigo/10 flex items-center justify-center shrink-0">
+          <Download size={14} className="text-indigo" />
+        </div>
+        <span className="text-[13px] text-ink font-semibold truncate group-hover:text-indigo transition-colors">
+          {name}
+        </span>
+      </a>
+      <div className="flex items-center gap-0.5 p-0.5 rounded-full border border-gray-200 bg-white shrink-0">
+        <button
+          type="button"
+          disabled={!hasEs}
+          onClick={(e) => { e.stopPropagation(); if (hasEs) setLang("es"); }}
+          aria-label="Ver en castellano"
+          className={`px-2 py-0.5 rounded-full text-[10px] font-bold font-mono tracking-wider transition-all ${
+            !hasEs
+              ? "text-gray-300 cursor-not-allowed"
+              : lang === "es"
+              ? "bg-ink text-white"
+              : "text-gray-500 hover:text-ink"
+          }`}
+          title={hasEs ? "Ver en castellano" : "Solo disponible en inglés"}
+        >
+          🇪🇸 ES
+        </button>
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); setLang("en"); }}
+          aria-label="View in English"
+          className={`px-2 py-0.5 rounded-full text-[10px] font-bold font-mono tracking-wider transition-all ${
+            lang === "en" ? "bg-ink text-white" : "text-gray-500 hover:text-ink"
+          }`}
+        >
+          🇬🇧 EN
+        </button>
+      </div>
+    </div>
+  );
+}
 
 export default function LegalModal({ open, type, onClose }) {
   const { t } = useI18n();
@@ -87,38 +141,22 @@ export default function LegalModal({ open, type, onClose }) {
                 Documentos legales oficiales de Next Reporting. Haz clic en cualquiera para abrirlo en PDF.
               </p>
               <div className="grid gap-2">
-                  {(type === "cookies"
-                    ? [
-                        { name: "Cookies Policy", file: "Nextreporting_Cookies Policy_Jun2026.pdf" },
-                      ]
-                    : [
-                        { name: "Terms and Conditions", file: "Nextreporting_Terms and Conditions_Jun2026.pdf" },
-                        { name: "SLA", file: "Nextreporting_SLA_Jun2026.pdf" },
-                        { name: "Professional Services Terms", file: "Nextreporting_Professional Services Terms_Jun2026.pdf" },
-                        { name: "Privacy Notice", file: "Nextreporting_Privacy Notice_Jun2026.pdf" },
-                        { name: "Information Security Policy", file: "Nextreporting_Information Security Policy_Jun2026.pdf" },
-                        { name: "DPA (Data Processing Agreement)", file: "Nextreporting_DPA_Jun2026.pdf" },
-                        { name: "White Label Software Distribution", file: "Nextreporting_White Label Software Distribution Agreement_Jun2026.pdf" },
-                      ]
-                  ).map((doc) => (
-                    <a
-                      key={doc.file}
-                      href={`/legal/${doc.file}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-between gap-3 px-4 py-3 bg-cloud hover:bg-mint/10 border border-gray-200 hover:border-indigo/40 rounded-xl transition-all group"
-                    >
-                      <div className="flex items-center gap-3 min-w-0">
-                        <div className="w-8 h-8 rounded-lg bg-indigo/10 flex items-center justify-center shrink-0">
-                          <Download size={14} className="text-indigo" />
-                        </div>
-                        <span className="text-[13px] text-ink font-semibold truncate group-hover:text-indigo transition-colors">
-                          {doc.name}
-                        </span>
-                      </div>
-                      <span className="text-[11px] font-mono text-gray-400 tracking-wider uppercase shrink-0">.pdf</span>
-                    </a>
-                  ))}
+                {(type === "cookies"
+                  ? [
+                      { name: "Cookies Policy", file: "Nextreporting_Cookies Policy_Jun2026.pdf" },
+                    ]
+                  : [
+                      { name: "Terms and Conditions", file: "Nextreporting_Terms and Conditions_Jun2026.pdf" },
+                      { name: "SLA", file: "Nextreporting_SLA_Jun2026.pdf" },
+                      { name: "Professional Services Terms", file: "Nextreporting_Professional Services Terms_Jun2026.pdf" },
+                      { name: "Privacy Notice", file: "Nextreporting_Privacy Notice_Jun2026.pdf" },
+                      { name: "Information Security Policy", file: "Nextreporting_Information Security Policy_Jun2026.pdf" },
+                      { name: "DPA (Data Processing Agreement)", file: "Nextreporting_DPA_Jun2026.pdf" },
+                      { name: "White Label Software Distribution", file: "Nextreporting_White Label Software Distribution Agreement_Jun2026.pdf", hasEs: false },
+                    ]
+                ).map((doc) => (
+                  <LegalDocRow key={doc.file} name={doc.name} file={doc.file} hasEs={doc.hasEs !== false} />
+                ))}
               </div>
             </div>
 
