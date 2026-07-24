@@ -5,6 +5,62 @@ import { useI18n } from "@/lib/i18n";
 import LegalModal from "./LegalModal";
 
 const STORAGE_KEY = "nr_cookie_consent";
+const ANALYTICS_URL =
+  "https://script.google.com/macros/s/AKfycbw950BSOYt-BUOK5Ny8Sd0INGMXEHsQnuRqYACJWleGeY1WsYEkq_eB0HaNUVi0BDntYw/exec";
+
+/**
+ * Recoge información del visitante y la envía al Sheet vía Apps Script.
+ * Solo se llama si el usuario pulsa "Aceptar todas".
+ */
+async function trackVisit(choice) {
+  const basic = {
+    source: "next_reporting_web", // el Apps Script enruta a la hoja "Next Reporting Web"
+    consent: choice,
+    fecha: new Date().toISOString(),
+    pageUrl: window.location.href,
+    referrer: document.referrer || "(directo)",
+    userAgent: navigator.userAgent,
+    language: navigator.language,
+    languages: (navigator.languages || []).join(", "),
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "",
+    screen: `${window.screen.width}x${window.screen.height}`,
+    viewport: `${window.innerWidth}x${window.innerHeight}`,
+    colorDepth: window.screen.colorDepth,
+    platform: navigator.platform || "",
+    cookieEnabled: navigator.cookieEnabled,
+  };
+
+  let geo = { ip: "", country: "", region: "", city: "", isp: "", postal: "", latitude: "", longitude: "" };
+  try {
+    const res = await fetch("https://ipapi.co/json/");
+    if (res.ok) {
+      const data = await res.json();
+      geo = {
+        ip: data.ip || "",
+        country: data.country_name || "",
+        region: data.region || "",
+        city: data.city || "",
+        isp: data.org || "",
+        postal: data.postal || "",
+        latitude: data.latitude || "",
+        longitude: data.longitude || "",
+      };
+    }
+  } catch (err) {
+    console.warn("[NR] geo IP:", err);
+  }
+
+  try {
+    await fetch(ANALYTICS_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...basic, ...geo }),
+    });
+  } catch (err) {
+    console.warn("[NR] tracking:", err);
+  }
+}
 
 export default function ConsentNotice() {
   const { t } = useI18n();
@@ -28,6 +84,10 @@ export default function ConsentNotice() {
       JSON.stringify({ choice, date: new Date().toISOString() })
     );
     setVisible(false);
+    // Solo trackea si el usuario aceptó todo
+    if (choice === "accepted") {
+      trackVisit(choice);
+    }
   };
 
   return (
