@@ -6,7 +6,7 @@ import MagneticButton from "./MagneticButton";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useI18n } from "@/lib/i18n";
 
-const SIGNIN_URL = "https://nextreporting.atebiz.com/";
+const SIGNIN_URL = "https://nextreport.atebiz.com/";
 
 export default function Navbar() {
   const { t } = useI18n();
