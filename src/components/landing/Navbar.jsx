@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Menu, X, ChevronDown } from "lucide-react";
 import MagneticButton from "./MagneticButton";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useI18n } from "@/lib/i18n";
+import { useLanding } from "@/components/report/shared";
 
 const SIGNIN_URL = "https://nextreport.atebiz.com/";
 
@@ -16,20 +17,20 @@ export default function Navbar() {
 
   const navigate = useNavigate();
 
-  const NAV_LINKS = [
-    { label: t.nav.product, href: "/solucion", isRoute: true },
-    {
-      label: t.nav.howToUse,
-      isDropdown: true,
-      children: [
-        { label: "CFO", href: "/casos/cfo" },
-        { label: "Controller", href: "/casos/controller" },
-        { label: "Consultor", href: "/casos/consultor" },
-      ],
-    },
-    { label: t.nav.resources, href: "/recursos", isRoute: true },
-    { label: t.nav.about, href: "/nosotros", isRoute: true },
-  ];
+  const { c: landing } = useLanding();
+  const location = useLocation();
+  // Enlaces de la portada: anclas a sus secciones (desde otra página, vuelve a "/" y baja a la sección)
+  const NAV_LINKS = landing.nav.links.map((l) => ({ label: l.label, href: `#${l.id}` }));
+  const goTo = (hash) => {
+    const id = hash.replace("#", "");
+    if (location.pathname !== "/") {
+      navigate(`/${hash}`);
+      return;
+    }
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  };
+  const goDemo = () => goTo("#contacto");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -68,7 +69,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop links */}
-          <div className="hidden lg:flex items-center gap-7">
+          <div className="hidden lg:flex items-center gap-6">
             {NAV_LINKS.map((l) => {
               if (l.isDropdown) {
                 return (
@@ -120,27 +121,15 @@ export default function Navbar() {
                 <button
                   key={l.href}
                   type="button"
-                  onClick={() => {
-                    if (l.isRoute) {
-                      navigate(l.href);
-                      window.scrollTo({ top: 0, behavior: "smooth" });
-                    } else {
-                      const el = document.querySelector(l.href);
-                      if (el) el.scrollIntoView({ behavior: "smooth" });
-                    }
-                  }}
-                  className="text-base text-gray-800 hover:text-indigo transition-colors font-bold"
+                  onClick={() => goTo(l.href)}
+                  className="text-[15px] text-gray-800 hover:text-indigo transition-colors font-bold"
                 >
                   {l.label}
                 </button>
               );
             })}
             <LanguageSwitcher />
-            <MagneticButton
-              to="/solicitar-demo"
-              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              primary
-            >
+            <MagneticButton href="#contacto" onClick={(e) => { e.preventDefault(); goDemo(); }} primary>
               {t.nav.requestDemo}
             </MagneticButton>
           </div>
@@ -208,13 +197,7 @@ export default function Navbar() {
                     type="button"
                     onClick={() => {
                       setMenuOpen(false);
-                      if (l.isRoute) {
-                        navigate(l.href);
-                        window.scrollTo({ top: 0, behavior: "smooth" });
-                      } else {
-                        const el = document.querySelector(l.href);
-                        if (el) el.scrollIntoView({ behavior: "smooth" });
-                      }
+                      goTo(l.href);
                     }}
                     className="block w-full text-left text-gray-600 hover:text-indigo text-base font-medium"
                   >
@@ -236,8 +219,7 @@ export default function Navbar() {
                 type="button"
                 onClick={() => {
                   setMenuOpen(false);
-                  navigate("/solicitar-demo");
-                  window.scrollTo({ top: 0, behavior: "smooth" });
+                  goDemo();
                 }}
                 className="block w-full bg-ink text-white text-center font-semibold py-3 rounded-full"
               >

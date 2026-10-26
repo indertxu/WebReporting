@@ -80,28 +80,8 @@ function buildAutoReplyHtml(name) {
   return html;
 }
 
-export function DemoForm({ t, onSuccess }) {
-  const f = t.finalCta.form;
-  const [form, setForm] = useState({ name: "", lastName: "", email: "", role: "", company: "", city: "", countryCode: "+34", phone: "", message: "" });
-  const [customRole, setCustomRole] = useState("");
-  const [status, setStatus] = useState("idle");
-  const [error, setError] = useState("");
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!form.name || !form.lastName || !form.email || !form.role || !form.company) {
-      setError(f.errorFields);
-      return;
-    }
-    if (form.role === t.finalCta.roles[5] && !customRole.trim()) {
-      setError(f.errorRole);
-      return;
-    }
-    setStatus("submitting");
-    setError("");
-    try {
-      const finalRole =
-        form.role === t.finalCta.roles[5] ? customRole.trim() : form.role;
+/** Envía la solicitud de demo (Web3Forms + Google Sheets + auto-respuesta EmailJS). La usan el formulario completo y el rápido de la portada. */
+export async function sendDemoRequest(form, errorGeneric = "Error") {
       const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: {
@@ -117,7 +97,7 @@ export function DemoForm({ t, onSuccess }) {
           Nombre: form.name,
           Apellido: form.lastName,
           Email: form.email,
-          Rol: finalRole,
+          Rol: form.role,
           Empresa: form.company,
           Ciudad: form.city || "(no indicada)", 
           Telefono: form.phone ? `${form.countryCode} ${form.phone}` : "(no indicado)",
@@ -126,7 +106,7 @@ export function DemoForm({ t, onSuccess }) {
       });
       const data = await response.json();
       if (!data.success) {
-        throw new Error(data.message || f.errorGeneric);
+        throw new Error(data.message || errorGeneric);
       }
       try {
         await fetch("https://script.google.com/macros/s/AKfycbw950BSOYt-BUOK5Ny8Sd0INGMXEHsQnuRqYACJWleGeY1WsYEkq_eB0HaNUVi0BDntYw/exec", {
@@ -138,7 +118,7 @@ export function DemoForm({ t, onSuccess }) {
             lastName: form.lastName,
             email: form.email,
             company: form.company,
-            role: finalRole,
+            role: form.role,
             city: form.city,
             phone: form.phone ? `${form.countryCode} ${form.phone}` : "",
           }),
@@ -175,6 +155,31 @@ export function DemoForm({ t, onSuccess }) {
       } catch (emailErr) {
         console.error("[EmailJS] Error de red:", emailErr);
       }
+}
+
+export function DemoForm({ t, onSuccess }) {
+  const f = t.finalCta.form;
+  const [form, setForm] = useState({ name: "", lastName: "", email: "", role: "", company: "", city: "", countryCode: "+34", phone: "", message: "" });
+  const [customRole, setCustomRole] = useState("");
+  const [status, setStatus] = useState("idle");
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!form.name || !form.lastName || !form.email || !form.role || !form.company) {
+      setError(f.errorFields);
+      return;
+    }
+    if (form.role === t.finalCta.roles[5] && !customRole.trim()) {
+      setError(f.errorRole);
+      return;
+    }
+    setStatus("submitting");
+    setError("");
+    try {
+      const finalRole =
+        form.role === t.finalCta.roles[5] ? customRole.trim() : form.role;
+      await sendDemoRequest({ ...form, role: finalRole }, f.errorGeneric);
       setStatus("success");
       onSuccess?.();
     } catch (err) {

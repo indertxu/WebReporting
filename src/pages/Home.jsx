@@ -1,38 +1,50 @@
-import React from "react";
-import ScrollProgress from "@/components/landing/ScrollProgress";
-import CursorGlow from "@/components/landing/CursorGlow";
-import Navbar from "@/components/landing/Navbar";
-import HeroSection from "@/components/landing/HeroSection";
-import KPISection from "@/components/landing/KPISection";
-import TrustStrip from "@/components/landing/TrustStrip";
-import CapabilitiesBento from "@/components/landing/CapabilitiesBento";
-import ProductShowcase from "@/components/landing/ProductShowcase";
+import React, { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import PFooter from "@/components/portal/PFooter";
+import Portal, { NextStep } from "@/components/portal/Portal";
+import PHero from "@/components/portal/PHero";
+import { PMarquee, PDemo, PFlow, PAuto, PTasks, PMoney, PScreens, PToday, PPlans, PSecurity, PFaq, PContact } from "@/components/portal/PSections";
+import { useI18n } from "@/lib/i18n";
+import "@/components/report/nr.css";
+import "@/components/portal/portal.css";
 
-import ScaleNumbers from "@/components/landing/ScaleNumbers";
-
-import Testimonial from "@/components/landing/Testimonial";
-import PartnerStrip from "@/components/landing/PartnerStrip";
-import FinalCTA from "@/components/landing/FinalCTA";
-import Footer from "@/components/landing/Footer";
-
+// Portada: la web es el propio portal de Next Reporting, recorrida paso a paso.
+// Los textos están en src/lib/landing/{es,en,pt,da}.js
 export default function Home() {
+  const { hash } = useLocation();
+  const { lang } = useI18n();
+  useEffect(() => { document.documentElement.lang = lang; }, [lang]);
+  useEffect(() => {
+    if (!hash) return;
+    const t = setTimeout(() => document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: "smooth" }), 150);
+    return () => clearTimeout(t);
+  }, [hash]);
+
   return (
-    <div className="bg-cloud min-h-screen relative">
-      <ScrollProgress />
-      <CursorGlow />
-      <Navbar />
-      <HeroSection />
-      <KPISection />
-      <TrustStrip />
-      <CapabilitiesBento />
-      <ProductShowcase />
-     
-      <ScaleNumbers />
-      
-      <Testimonial />
-      <PartnerStrip />
-      <FinalCTA />
-      <Footer />
-    </div>
+    <Portal footer={<PFooter />}>
+      <PHero />
+      <PMarquee />
+      <NextStep to="demo" />
+      <PDemo />
+      <NextStep to="datos" />
+      <PFlow />
+      <NextStep to="auto" />
+      <PAuto />
+      <NextStep to="ahorro" />
+      <PTasks />
+      <NextStep to="monedas" />
+      <PMoney />
+      <NextStep to="pantallas" />
+      <PScreens />
+      <PToday />
+      <NextStep to="planes" />
+      <PPlans />
+      <NextStep to="seguridad" />
+      <PSecurity />
+      <NextStep to="faq" />
+      <PFaq />
+      <NextStep to="contacto" />
+      <PContact />
+    </Portal>
   );
 }
