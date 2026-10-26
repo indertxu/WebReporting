@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import PFooter from "@/components/portal/PFooter";
 import Portal, { NextStep } from "@/components/portal/Portal";
 import PHero from "@/components/portal/PHero";
-import { PMarquee, PDemo, PFlow, PAuto, PTasks, PMoney, PScreens, PToday, PPlans, PSecurity, PFaq, PContact } from "@/components/portal/PSections";
+import { PClose, PFlow, PAuto, PTasks, PMoney, PScreens, PPlans, PSecurity, PFaq, PContact } from "@/components/portal/PSections";
 import { useI18n } from "@/lib/i18n";
 import "@/components/report/nr.css";
 import "@/components/portal/portal.css";
@@ -23,9 +23,8 @@ export default function Home() {
   return (
     <Portal footer={<PFooter />}>
       <PHero />
-      <PMarquee />
-      <NextStep to="demo" />
-      <PDemo />
+      <NextStep to="cierre" />
+      <PClose />
       <NextStep to="datos" />
       <PFlow />
       <NextStep to="auto" />
@@ -36,7 +35,6 @@ export default function Home() {
       <PMoney />
       <NextStep to="pantallas" />
       <PScreens />
-      <PToday />
       <NextStep to="planes" />
       <PPlans />
       <NextStep to="seguridad" />

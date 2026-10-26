@@ -17,7 +17,7 @@ export default {
     typing: ["em horas, não em dias.", "sem copiar e colar.", "do consolidado ao lançamento.", "com os câmbios do BCE já postos."],
     subLead: "Sem um Excel pelo meio.",
     sub: "O Next Reporting recebe a contabilidade de cada sociedade, valida-a, converte-a para a moeda do grupo e devolve-a em relatórios, KPIs e apresentações para a direção.",
-    note: "Demo de 30 minutos com os seus próprios números. Respondemos em menos de 24 h.",
+    note: "Mostramos-lhe o produto em 30 minutos, com um grupo de exemplo. Respondemos em menos de 24 h.",
     noteLink: "Ver os planos",
     invite: "Isto é o Next Reporting. Experimente.",
   },
@@ -187,7 +187,7 @@ export default {
     title: "Escolhe por onde *entram os seus dados.*",
     lead: "Os relatórios são os mesmos em todos os planos. O que muda é de onde o Next Reporting lê e até onde chega.",
     steps: [
-      { t: "Uma demo com os seus números", b: "Traz o Excel de uma sociedade e vê-o carregado, validado e em relatório." },
+      { t: "Uma demo de 30 minutos", b: "Mostramos o produto com um grupo de exemplo: cargas, validação, relatórios e apresentações." },
       { t: "Escolhe o plano", b: "Conforme onde estão hoje os seus dados: Konsolidator, os seus ficheiros ou o seu Data Warehouse." },
       { t: "Primeiro fecho cá dentro", b: "Configuramos consigo estrutura e mapeamentos, e o fecho seguinte já sai daqui." },
     ],
@@ -248,8 +248,8 @@ export default {
     ],
   },
   final: {
-    title: "Experimentamos *com o seu fecho?*",
-    lead: "Traga o Excel de uma sociedade tal como sai do ERP. Em 30 minutos vê-o carregado, validado e transformado em relatório.",
+    title: "Vemos *juntos?*",
+    lead: "Em 30 minutos mostramos como um grupo de exemplo passa dos Excel de cada sociedade ao relatório para a administração. Sem compromisso.",
     full: "Prefere o formulário completo?",
   },
   portal: {
@@ -270,8 +270,8 @@ export default {
             "home"
           ],
           [
-            "demo",
-            "Demo ao vivo",
+            "cierre",
+            "Cada fecho",
             "play"
           ]
         ]

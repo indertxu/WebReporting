@@ -20,15 +20,27 @@ export function useInView(opts = {}) {
   return [ref, on];
 }
 
-/** Aparición con desenfoque de todos los .rv dentro del contenedor. */
+/** Aparición coreografiada: lo que entra a la vez aparece EN ORDEN (ruta, título, entradilla,
+ *  tarjetas…), una pieza cada 110 ms, para que el ojo sepa qué mirar primero. */
 export function useReveal() {
   const ref = useRef(null);
   useEffect(() => {
     const root = ref.current;
     if (!root) return;
-    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("on"); io.unobserve(e.target); } }), { rootMargin: "0px 0px -8% 0px" });
+    const timers = [];
+    const io = new IntersectionObserver((es) => {
+      const vis = es.filter((e) => e.isIntersecting).map((e) => e.target)
+        .sort((x, y) => (x.compareDocumentPosition(y) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1));
+      vis.forEach((el, k) => {
+        const d = Math.min(k, 8) * 0.11;
+        el.style.transitionDelay = `${d}s`;
+        el.classList.add("on");
+        io.unobserve(el);
+        timers.push(setTimeout(() => { el.style.transitionDelay = ""; }, (d + 1.2) * 1000));
+      });
+    }, { rootMargin: "0px 0px -14% 0px" });
     root.querySelectorAll(".rv:not(.on)").forEach((el) => io.observe(el));
-    return () => io.disconnect();
+    return () => { io.disconnect(); timers.forEach(clearTimeout); };
   });
   return ref;
 }
@@ -55,6 +67,7 @@ export function useCount(target, active, ms = 1600, from = 0) {
 /** Un contador que avanza cada `ms` mientras `active`; vuelve a 0 al llegar a `n`. */
 export function useTick(n, ms, active = true) {
   const [i, setI] = useState(0);
+  useEffect(() => { if (active) setI(0); }, [active]);
   useEffect(() => {
     if (!active) return;
     const t = setInterval(() => setI((x) => (x + 1) % n), ms);
@@ -80,4 +93,44 @@ export function useTyping(frases) {
     return () => clearTimeout(t);
   }, [n, borra, i, frases]);
   return (frases[i] || "").slice(0, n);
+}
+
+/** Foco por turnos: dentro de un grupo, solo una pieza está "encendida" a la vez y el turno
+ *  pasa a la siguiente cada `ms`. Al pasar el ratón o tocar, se queda en esa. */
+export function useSpotlight(n, ms, inView) {
+  const [i, setI] = useState(0);
+  const [hold, setHold] = useState(false);
+  // Primero dejamos que el grupo aparezca; luego empieza el turno
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    if (!inView) { setReady(false); return; }
+    const t = setTimeout(() => setReady(true), 900);
+    return () => clearTimeout(t);
+  }, [inView]);
+  const active = inView && ready;
+  useEffect(() => { if (active) setI(0); }, [active]);
+  useEffect(() => {
+    if (!active || hold || reduced()) return;
+    const t = setTimeout(() => setI((x) => (x + 1) % n), ms);
+    return () => clearTimeout(t);
+  }, [n, ms, active, hold, i]);
+  const props = (k) => ({
+    onMouseEnter: () => { setI(k); setHold(true); },
+    onMouseLeave: () => setHold(false),
+    onClick: () => setI(k),
+  });
+  const cls = (k) => (active ? (k === i ? "lit" : "unlit") : "");
+  return { i: active ? i : -1, hold, props, cls };
+}
+
+/** Pantalla ancha (las tarjetas van en fila). */
+export function useWide(q = "(min-width: 1025px)") {
+  const [w, setW] = useState(() => typeof window !== "undefined" && window.matchMedia?.(q).matches);
+  useEffect(() => {
+    const m = window.matchMedia(q);
+    const on = () => setW(m.matches);
+    m.addEventListener?.("change", on);
+    return () => m.removeEventListener?.("change", on);
+  }, [q]);
+  return w;
 }

@@ -18,7 +18,7 @@ export default {
     typing: ["en horas, no en días.", "sin copiar y pegar.", "del consolidado al asiento.", "con los tipos del BCE puestos."],
     subLead: "Sin un Excel de por medio.",
     sub: "Next Reporting recibe la contabilidad de cada sociedad, la cuadra, la pasa a la divisa del grupo y te la devuelve en informes, KPIs y presentaciones para dirección.",
-    note: "Demo de 30 minutos con tus propios números. Te respondemos en menos de 24 h.",
+    note: "Te enseñamos el producto en 30 minutos, con un grupo de ejemplo. Te respondemos en menos de 24 h.",
     noteLink: "Ver los planes",
     invite: "Esto es Next Reporting. Tócalo.",
   },
@@ -188,7 +188,7 @@ export default {
     title: "Eliges por dónde *entran tus datos.*",
     lead: "Los informes son los mismos en todos los planes. Lo que cambia es de dónde lee Next Reporting y hasta dónde llega.",
     steps: [
-      { t: "Una demo con tus números", b: "Traes el Excel de una sociedad y lo ves cargado, cuadrado y en informe." },
+      { t: "Una demo de 30 minutos", b: "Te enseñamos el producto con un grupo de ejemplo: cargas, cuadre, informes y presentaciones." },
       { t: "Eliges plan", b: "Según dónde están hoy tus datos: Konsolidator, tus archivos o tu Data Warehouse." },
       { t: "Primer cierre dentro", b: "Configuramos contigo estructura y mapeos, y el siguiente cierre ya sale de aquí." },
     ],
@@ -249,8 +249,8 @@ export default {
     ],
   },
   final: {
-    title: "¿Lo probamos *con tu cierre?*",
-    lead: "Trae el Excel de una sociedad tal cual sale del ERP. En 30 minutos lo ves cargado, cuadrado y convertido en informe.",
+    title: "¿Lo vemos *juntos?*",
+    lead: "En 30 minutos te enseñamos cómo un grupo de ejemplo pasa de los Excel de cada sociedad al informe del consejo. Sin compromiso.",
     full: "¿Prefieres el formulario completo?",
   },
   portal: {
@@ -271,8 +271,8 @@ export default {
             "home"
           ],
           [
-            "demo",
-            "Demo en vivo",
+            "cierre",
+            "Cada cierre",
             "play"
           ]
         ]

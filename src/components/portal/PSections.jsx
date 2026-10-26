@@ -1,12 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, Plus, MousePointerClick, ArrowLeftRight, Coins, Building2, LineChart, Calculator, Layers3, Briefcase,
-  ShieldCheck, Lock, Users, KeyRound, ScrollText, Languages, FileSpreadsheet, CornerDownRight } from "lucide-react";
+import { Check, Plus, ShieldCheck, Lock, Users, KeyRound, ScrollText, Languages, CornerDownRight } from "lucide-react";
 import { useLanding, Hl, irA } from "@/components/report/shared";
-import LiveWindow from "@/components/report/LiveWindow";
 import QuickDemo from "@/components/report/QuickDemo";
-import { useCount, useInView, useReveal, useTick } from "./hooks";
+import { useCount, useInView, useReveal, useTick, useSpotlight, useWide } from "./hooks";
 import { STEPS, pad } from "./Portal";
 
 /** Cabecera de cada pantalla: el número de paso del recorrido + título + entradilla. */
@@ -14,56 +12,37 @@ const SID = { automatico: "auto" };
 function Head({ path, eyebrow, title, lead, center }) {
   const n = STEPS.indexOf(SID[path] || path);
   return (
-    <div className={`pt-head rv ${center ? "c" : ""}`}>
-      <div className="pt-path">
+    <div className={`pt-head ${center ? "c" : ""}`}>
+      <div className="pt-path rv">
         {n >= 0 ? <span className="pt-step-n">{pad(n + 1)} / {pad(STEPS.length)}</span> : <span>~/</span>}
         <b>{path}</b>{eyebrow && eyebrow.toLowerCase() !== path ? <span>· {eyebrow}</span> : null}
       </div>
-      <h2><Hl text={title} /></h2>
-      {lead && <p className="lead"><Hl text={lead} /></p>}
+      <h2 className="rv"><Hl text={title} /></h2>
+      {lead && <p className="lead rv"><Hl text={lead} /></p>}
     </div>
   );
 }
 
-/* ═════ Marquesina: lo que ya hace ═════ */
-export function PMarquee() {
-  const { c } = useLanding();
-  const items = c.today.cols.flat().map(([b]) => b);
-  return (
-    <div className="pt-marquee" aria-hidden>
-      <div>{[...items, ...items].map((t, i) => <span key={i}>{t}</span>)}</div>
-    </div>
-  );
-}
-
-/* ═════ Demo en vivo: el producto, tocable ═════ */
-export function PDemo() {
+/* ═════ Cada cierre: las tres preguntas, una detrás de otra ═════ */
+export function PClose() {
   const { c } = useLanding();
   const q = c.questions;
   const ref = useReveal();
+  const wide = useWide();
+  const [qr, qrOn] = useInView({ once: false, margin: "-20% 0px -20% 0px" });
+  const qOn = wide && qrOn;
+  const sp = useSpotlight(q.items.length, 3800, qOn);
   return (
-    <section className="pt-page" id="demo" ref={ref} aria-labelledby="pt-demo">
+    <section className="pt-page" id="cierre" ref={ref} aria-labelledby="pt-cierre">
       <div className="pt-in">
-        <div className="pt-head rv c">
-          <div className="pt-path"><span className="pt-step-n">02 / 11</span><b>demo</b><span>· {c.hero.invite}</span></div>
-          <h2 id="pt-demo"><Hl text={q.title} /></h2>
-          <p className="lead"><Hl text={q.lead} /></p>
-        </div>
-        <div className="pt-qrow">
+        <Head path="cierre" eyebrow={q.eyebrow} title={q.title} lead={q.lead} center />
+        <div className="pt-qrow" ref={qr}>
           {q.items.map((it, i) => (
-            <div key={it.k} className="pt-q rv" style={{ transitionDelay: `${i * .08}s` }}>
+            <div key={it.k} className={`pt-q rv ${qOn ? (sp.i === i ? "lit" : "") : "lit"}`} {...sp.props(i)}>
               <span className="mono">{it.k}</span><b>{it.title}</b><p>{it.body}</p>
+              {qOn && sp.i === i && !sp.hold && <span className="pt-timer" key={`t${sp.i}`} style={{ animationDuration: "3800ms" }} />}
             </div>
           ))}
-        </div>
-        <div className="pt-demo-wrap rv">
-          <div className="nr pt-embed"><LiveWindow /></div>
-        </div>
-        <div className="pt-demo-tips rv">
-          <span><MousePointerClick size={13} /> {c.window.clickHint}</span>
-          <span><ArrowLeftRight size={13} /> {Object.values(c.window.views).join(" · ")}</span>
-          <span><Coins size={13} /> EUR · GBP · USD</span>
-          <span><Building2 size={13} /> {c.window.group}</span>
         </div>
       </div>
     </section>
@@ -178,15 +157,19 @@ function VizDrill({ p, on }) {
     </ul>
   );
 }
-function Pillar({ it, i, p }) {
-  const [ref, on] = useInView({ once: false });
+const TURN = 5200;
+function Pillar({ it, i, p, sp, group }) {
+  const [ref, inView] = useInView({ once: false, margin: "-30% 0px -30% 0px" });
   const V = { upload: VizUpload, checks: VizChecks, drill: VizDrill }[it.visual];
+  // En pantalla ancha va por turnos; en móvil, la que está en el centro
+  const on = group ? sp.i === i : inView;
   return (
-    <div ref={ref} className="pt-card pt-pillar rv" style={{ transitionDelay: `${i * .08}s` }}>
+    <div ref={ref} className={`pt-card pt-pillar rv ${group ? sp.cls(i) : ""}`} {...(group ? sp.props(i) : {})}>
       <span className="pt-k">{it.k}</span>
       <h3>{it.title}</h3>
       <p>{it.body}</p>
       <div className="viz">{V && <V p={p} on={on} />}</div>
+      {group && on && !sp.hold && <span className="pt-timer" key={`t${sp.i}`} style={{ animationDuration: `${TURN}ms` }} />}
     </div>
   );
 }
@@ -195,52 +178,16 @@ export function PAuto() {
   const { c } = useLanding();
   const p = c.pillars, a = c.auto;
   const ref = useReveal();
-  const [fase, setFase] = useState(0);
-  const timers = useRef([]);
-  const total = a.fields.length;
-  const leer = () => {
-    timers.current.forEach(clearTimeout);
-    setFase(1);
-    timers.current = a.fields.map((_, i) => setTimeout(() => setFase(2 + i), 1000 + i * 360));
-    timers.current.push(setTimeout(() => setFase(2 + total), 1000 + total * 360 + 200));
-  };
-  const [rd, rdOn] = useInView();
-  useEffect(() => { if (rdOn) { const t = setTimeout(leer, 500); return () => clearTimeout(t); } }, [rdOn]);
-  useEffect(() => () => timers.current.forEach(clearTimeout), []);
-  const hecho = fase >= 2 + total;
+  const wide = useWide();
+  const [pg, pgOn] = useInView({ once: false, margin: "-25% 0px -25% 0px" });
+  const group = wide && pgOn;
+  const sp = useSpotlight(p.items.length, TURN, group);
   return (
     <section className="pt-page" id="auto" ref={ref} aria-labelledby="pt-auto">
       <div className="pt-in">
         <Head path="automatico" eyebrow={p.eyebrow} title={p.title} lead={a.lead} />
-        <div className="pt-grid3">{p.items.map((it, i) => <Pillar key={it.k} it={it} i={i} p={p} />)}</div>
+        <div className="pt-grid3" ref={pg}>{p.items.map((it, i) => <Pillar key={it.k} it={it} i={i} p={p} sp={sp} group={group} />)}</div>
 
-        <div className="pt-card pt-reader rv" ref={rd}>
-          <div>
-            <div className="pt-sheet">
-              <div className="h"><FileSpreadsheet size={14} color="var(--mint)" />{a.file}</div>
-              <span className={`pt-scan ${fase === 1 ? "on" : ""}`} />
-              <table><tbody>
-                {a.rows.map((r, i) => (
-                  <tr key={i} className={i === 0 ? "t" : ""}>
-                    <td>{i + 4}</td>
-                    {r.map((cel, j) => <td key={j} className={i === 0 && fase >= 2 && j < 6 ? "mk" : ""}>{cel}</td>)}
-                  </tr>
-                ))}
-              </tbody></table>
-            </div>
-            <div className="pt-reader-foot">
-              <button className="btn sm" type="button" onClick={leer} disabled={fase === 1}>{hecho ? a.again : a.read} <span className="fl">→</span></button>
-              <span>{a.hint}</span>
-            </div>
-          </div>
-          <div className="pt-fields">
-            <span className="pt-k" style={{ marginBottom: 4 }}>{a.eyebrow}</span>
-            {a.fields.map(([k, v], i) => (
-              <div key={k} className={`pt-field ${fase >= 2 + i ? "ok" : ""}`}><span>{k}</span><span>{fase >= 2 + i ? v : "—"}</span></div>
-            ))}
-            <div className="pt-okline" style={{ opacity: hecho ? 1 : 0 }}><Check size={14} strokeWidth={3} />{a.ok}</div>
-          </div>
-        </div>
       </div>
     </section>
   );
@@ -283,7 +230,7 @@ export function PTasks() {
         </div>
         <div className="pt-card pt-table rv">
           <div className="pt-trh"><span>{t.colTask}</span><span>{t.excel}</span><span>{t.report}</span></div>
-          {t.rows.map((r, i) => <TaskRow key={r[0]} r={r} i={i} />)}
+          {[0, 2, 3, 5, 6, 8].map((k) => t.rows[k]).filter(Boolean).map((r, i) => <TaskRow key={r[0]} r={r} i={i} />)}
         </div>
         <p className="pt-notbi rv">{t.notBi}</p>
       </div>
@@ -296,29 +243,33 @@ export function PMoney() {
   const { c } = useLanding();
   const m = c.money;
   const ref = useReveal();
-  const [fx, on] = useInView();
-  const hi = useTick(m.fx.length - 1, 1400, on);
+  const wide = useWide();
+  const [grid, gridOn] = useInView({ once: false, margin: "-25% 0px -25% 0px" });
+  const group = wide && gridOn;
+  const sp = useSpotlight(m.items.length, 4200, group);
+  const fxOn = group ? sp.i === 2 : gridOn;
+  const hi = useTick(m.fx.length - 1, 1100, fxOn);
   return (
     <section className="pt-page" id="monedas" ref={ref} aria-labelledby="pt-mon">
       <div className="pt-in">
         <Head path="monedas" eyebrow={m.eyebrow} title={m.title} lead={m.lead} />
-        <div className="pt-grid3">
+        <div className="pt-grid3" ref={grid}>
           {m.items.map((it, i) => (
-            <div key={it.k} className="pt-card rv" style={{ padding: 26, transitionDelay: `${i * .08}s` }} ref={i === 2 ? fx : undefined}>
+            <div key={it.k} className={`pt-card rv ${group ? sp.cls(i) : ""}`} style={{ padding: 26 }} {...(group ? sp.props(i) : {})}>
+              {group && sp.i === i && !sp.hold && <span className="pt-timer" key={`t${sp.i}`} style={{ animationDuration: "4200ms" }} />}
               <span className="pt-k">{it.k}</span>
               <h3>{it.title}</h3>
               <p>{it.body}</p>
               {i === 2 ? (
                 <div className="pt-fx">
                   {m.fx.map((r, j) => (
-                    <div key={j} className={j > 0 && hi === j - 1 ? "hot" : ""}><span>{r[0]}</span><span>{r[1]}</span><span>{r[2]}</span></div>
+                    <div key={j} className={fxOn && j > 0 && hi === j - 1 ? "hot" : ""}><span>{r[0]}</span><span>{r[1]}</span><span>{r[2]}</span></div>
                   ))}
                 </div>
               ) : (
-                <div className="pt-fxviz">
-                  {(i === 0 ? ["EUR", "GBP", "USD", "DKK"] : ["Q1", "Q2", "Q3", "Q4"]).map((x, j) => (
-                    <span key={x}><i style={{ height: `${[62, 48, 80, 36][(j + i) % 4]}%`, animationDelay: `${j * .15}s` }} />{x}</span>
-                  ))}
+                <div className="pt-rate">
+                  <span className="mono">{m.fx[1][0]} · {m.fx[0][i + 1]}</span>
+                  <b className="mono">{m.fx[1][i + 1]}</b>
                 </div>
               )}
             </div>
@@ -381,27 +332,6 @@ export function PScreens() {
   );
 }
 
-/* ═════ Hoy ═════ */
-export function PToday() {
-  const { c } = useLanding();
-  const t = c.today;
-  const ref = useReveal();
-  return (
-    <section className="pt-page" ref={ref} aria-labelledby="pt-hoy">
-      <div className="pt-in">
-        <Head path="hoy" eyebrow={t.eyebrow} title={t.title} lead={t.lead} />
-        <div className="pt-grid3">
-          {t.cols.map((col, i) => (
-            <div key={i} className="pt-card rv" style={{ padding: 24, transitionDelay: `${i * .08}s` }}>
-              <ul className="pt-list">{col.map(([b, r]) => <li key={b}><span className="pt-tic">✓</span><span><b>{b}</b>{r}</span></li>)}</ul>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 /* ═════ Planes ═════ */
 function Cell({ v }) {
   if (v === true) return <span className="si">✓</span>;
@@ -420,7 +350,7 @@ export function PPlans() {
         <Head path="planes" eyebrow={p.eyebrow} title={p.title} lead={p.lead} />
         <div className="pt-steps3">
           {p.steps.map((st, i) => (
-            <div key={st.t} className="pt-card pt-step rv" style={{ transitionDelay: `${i * .08}s` }}>
+            <div key={st.t} className="pt-card pt-step rv">
               <span className="n">{i + 1}</span><div><b>{st.t}</b><span>{st.b}</span></div>
             </div>
           ))}
@@ -437,8 +367,8 @@ export function PPlans() {
           </div>
         </div>
         <div className="pt-plans">
-          {p.items.map((pl, i) => (
-            <motion.article key={pl.id} layout className={`pt-card pt-plan rv ${rec === pl.id ? "rec" : ""}`} style={{ transitionDelay: `${i * .08}s` }}
+          {p.items.map((pl) => (
+            <motion.article key={pl.id} layout className={`pt-card pt-plan rv ${rec === pl.id ? "rec" : ""}`}
               animate={{ scale: rec === pl.id ? 1.02 : 1 }} transition={{ type: "spring", stiffness: 300, damping: 26 }}>
               <AnimatePresence>{rec === pl.id && <motion.span className="badge" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>{p.badge}</motion.span>}</AnimatePresence>
               <span className="pt-k">{p.price} · {p.priceValue}</span>
@@ -469,10 +399,9 @@ export function PPlans() {
 
 /* ═════ Seguridad + para quién ═════ */
 const SEC_IC = [Lock, ShieldCheck, Users, KeyRound, ScrollText, Languages];
-const AUD_IC = { cfo: LineChart, ctl: Calculator, cons: Layers3, desp: Briefcase };
 export function PSecurity() {
   const { c } = useLanding();
-  const s = c.security, a = c.audience;
+  const s = c.security;
   const ref = useReveal();
   return (
     <section className="pt-page" id="seguridad" ref={ref} aria-labelledby="pt-seg">
@@ -482,27 +411,10 @@ export function PSecurity() {
           {s.items.map(([b, r], i) => {
             const I = SEC_IC[i % SEC_IC.length];
             return (
-              <div key={b} className="pt-card pt-sec rv" style={{ padding: 22, transitionDelay: `${(i % 3) * .07}s` }}>
+              <div key={b} className="pt-card pt-sec rv" style={{ padding: 22 }}>
                 <span className="ic"><I size={18} /></span>
                 <h3 style={{ fontSize: 17, marginTop: 14 }}>{b.replace(/^[:,\s]+|[:,\s]+$/g, "")}</h3>
                 <p>{r.replace(/^[:,\s]+/, "")}</p>
-              </div>
-            );
-          })}
-        </div>
-        <div className="pt-head rv" style={{ marginTop: 70, marginBottom: 26 }}>
-          <div className="pt-path"><span>~/</span><b>equipos</b><span>· {a.eyebrow}</span></div>
-          <h2 style={{ fontSize: "clamp(28px,3.4vw,42px)" }}><Hl text={a.title} /></h2>
-          <p className="lead">{a.lead}</p>
-        </div>
-        <div className="pt-grid4">
-          {a.items.map((it, i) => {
-            const I = AUD_IC[it.icon] || Users;
-            return (
-              <div key={it.title} className="pt-card pt-sec rv" style={{ padding: 22, transitionDelay: `${i * .07}s` }}>
-                <span className="ic"><I size={18} /></span>
-                <h3 style={{ fontSize: 17, marginTop: 14 }}>{it.title}</h3>
-                <p>{it.body}</p>
               </div>
             );
           })}
@@ -542,7 +454,7 @@ export function PContact() {
   return (
     <section className="pt-page pt-contact" id="contacto" ref={ref} aria-labelledby="pt-fin">
       <div className="pt-in">
-        <div className="pt-path rv"><span className="pt-step-n">11 / 11</span><b>contacto</b><span>· demo</span></div>
+        <div className="pt-path rv"><span className="pt-step-n">11 / 11</span><b>contacto</b></div>
         <h2 id="pt-fin" className="rv"><Hl text={f.title} /></h2>
         <p className="lead rv" style={{ margin: "18px auto 0" }}>{f.lead}</p>
         <div className="rv"><QuickDemo id="pedir-2" /></div>

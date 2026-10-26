@@ -8,13 +8,13 @@ import { reduced } from "./hooks";
 
 export const SIGNIN_URL = "https://nextreport.atebiz.com/";
 /** Los pasos del recorrido, en orden (son los id de cada sección). */
-export const STEPS = ["inicio", "demo", "datos", "auto", "ahorro", "monedas", "pantallas", "planes", "seguridad", "faq", "contacto"];
-const NAV = ["demo", "datos", "auto", "ahorro", "pantallas", "planes", "faq"];
+export const STEPS = ["inicio", "cierre", "datos", "auto", "ahorro", "monedas", "pantallas", "planes", "seguridad", "faq", "contacto"];
+const NAV = ["cierre", "datos", "auto", "ahorro", "pantallas", "planes", "faq"];
 const UI = {
-  es: { step: "Paso", of: "de", next: "Siguiente", top: "Volver arriba", light: "Modo claro", dark: "Modo oscuro" },
-  en: { step: "Step", of: "of", next: "Next", top: "Back to top", light: "Light mode", dark: "Dark mode" },
-  pt: { step: "Passo", of: "de", next: "Seguinte", top: "Voltar ao topo", light: "Modo claro", dark: "Modo escuro" },
-  da: { step: "Trin", of: "af", next: "Næste", top: "Til toppen", light: "Lyst tema", dark: "Mørkt tema" },
+  es: { start: "Empieza el recorrido", step: "Paso", of: "de", next: "Siguiente", top: "Volver arriba", light: "Modo claro", dark: "Modo oscuro" },
+  en: { start: "Take the tour", step: "Step", of: "of", next: "Next", top: "Back to top", light: "Light mode", dark: "Dark mode" },
+  pt: { start: "Comece o percurso", step: "Passo", of: "de", next: "Seguinte", top: "Voltar ao topo", light: "Modo claro", dark: "Modo escuro" },
+  da: { start: "Tag rundturen", step: "Trin", of: "af", next: "Næste", top: "Til toppen", light: "Lyst tema", dark: "Mørkt tema" },
 };
 export const pad = (n) => String(n).padStart(2, "0");
 
@@ -57,7 +57,7 @@ function Lang() {
 }
 
 function readTheme() {
-  try { return localStorage.getItem("nr-theme") === "light" ? "light" : "dark"; } catch { return "dark"; }
+  try { return localStorage.getItem("nr-theme") === "dark" ? "dark" : "light"; } catch { return "light"; }
 }
 
 /** Interruptor de estética con un barrido circular desde el botón (si el navegador lo permite). */
@@ -114,12 +114,22 @@ export default function Portal({ children, footer }) {
   const { scrollYProgress } = useScroll();
   const prog = useSpring(scrollYProgress, { stiffness: 140, damping: 30 });
 
-  // Paso que está en pantalla
+  // Paso que está en pantalla: el último cuya parte de arriba ya pasó el centro
   useEffect(() => {
-    const els = STEPS.map((id) => document.getElementById(id)).filter(Boolean);
-    const io = new IntersectionObserver((es) => es.forEach((e) => e.isIntersecting && setAct(e.target.id)), { rootMargin: "-45% 0px -50% 0px" });
-    els.forEach((el) => io.observe(el));
-    return () => io.disconnect();
+    let raf = 0;
+    const run = () => {
+      raf = 0;
+      const line = innerHeight * 0.45;
+      let cur = STEPS[0];
+      for (const id of STEPS) { const el = document.getElementById(id); if (el && el.getBoundingClientRect().top <= line) cur = id; }
+      if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) cur = STEPS[STEPS.length - 1];
+      setAct(cur);
+    };
+    const on = () => { if (!raf) raf = requestAnimationFrame(run); };
+    run();
+    const iv = setInterval(run, 700);
+    addEventListener("scroll", on, { passive: true });
+    return () => { removeEventListener("scroll", on); cancelAnimationFrame(raf); clearInterval(iv); };
   }, [c]);
 
   // Cada pantalla "llega": sube, crece y se enciende a medida que entra
@@ -137,6 +147,22 @@ export default function Portal({ children, footer }) {
         if (e >= 1) { el.style.transform = ""; el.style.opacity = ""; return; }
         el.style.transform = `translate3d(0, ${(1 - e) * 70}px, 0) scale(${0.93 + 0.07 * e})`;
         el.style.opacity = String(0.2 + 0.8 * e);
+      });
+      // Títulos: el color de la palabra clave se rellena entre el 88 % y el 50 % de la pantalla
+      document.querySelectorAll(".pt-page h2").forEach((el) => {
+        const t = el.getBoundingClientRect().top;
+        const f = Math.min(1, Math.max(0, (vh * 0.88 - t) / (vh * 0.38)));
+        el.style.setProperty("--fill", f.toFixed(3));
+      });
+      // Foco: lo que pasa por el centro de la pantalla se enciende, lo demás se apaga un poco
+      const lo = vh * 0.28, hi = vh * 0.72, fall = vh * 0.32;
+      document.querySelectorAll(".pt-main .pt-card, .pt-tr, .pt-q, .pt-page, .pt-faq details").forEach((el) => {
+        if (el.closest(".pt-hero")) return;
+        const r = el.getBoundingClientRect();
+        const d = Math.max(0, r.top - hi, lo - r.bottom);
+        let f = 1 - Math.min(1, d / fall);
+        f = f * f * (3 - 2 * f);
+        el.style.setProperty("--f", f.toFixed(3));
       });
     };
     const on = () => { if (!raf) raf = requestAnimationFrame(run); };
@@ -233,7 +259,7 @@ export default function Portal({ children, footer }) {
               </span>
               <span className="pt-guide-t">
                 <small>{ui.step} {i + 1} {ui.of} {STEPS.length}</small>
-                <AnimatePresence mode="wait"><motion.b key={act} initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -10, opacity: 0 }} transition={{ duration: .22 }}>{names[act]}</motion.b></AnimatePresence>
+                <motion.b key={act} initial={{ y: 8, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: .25 }}>{names[act]}</motion.b>
               </span>
               <span className="pt-gdots">
                 {STEPS.map((id, k) => <button key={id} type="button" aria-label={names[id]} title={names[id]} className={k === i ? "on" : k < i ? "done" : ""} onClick={() => go(id)} />)}

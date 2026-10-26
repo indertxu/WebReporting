@@ -1,9 +1,10 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence, useScroll, useTransform, useSpring } from "framer-motion";
 import { Check, AlertTriangle, RefreshCw } from "lucide-react";
 import { useLanding, irA, LOCALES } from "@/components/report/shared";
 import QuickDemo from "@/components/report/QuickDemo";
 import { useCount, useInView, useTick, useTyping } from "./hooks";
+import { useSteps } from "./Portal";
 
 // Ingresos mensuales del grupo de ejemplo (miles de €): este año y el anterior
 const NOW = [4820, 5110, 5390, 5240, 5680, 5920, 5530, 5070, 6010, 6280, 6450, 6890];
@@ -110,8 +111,12 @@ export default function PHero() {
   const { c, lang } = useLanding();
   const h = c.hero, p = c.portal;
   const typed = useTyping(h.typing);
+  const { ui } = useSteps();
   const [dash, on] = useInView({ margin: "0px" });
-  const t = useTick(p.toasts.length, 3200, on);
+  // Los avisos llegan cuando el gráfico ya se ha dibujado, de uno en uno
+  const [late, setLate] = useState(false);
+  useEffect(() => { if (!on) return; const k = setTimeout(() => setLate(true), 3600); return () => clearTimeout(k); }, [on]);
+  const t = useTick(p.toasts.length, 4200, late);
   const words = h.title.split(" ");
   // El tablero llega inclinado y se endereza al bajar
   const tilt = useRef(null);
@@ -119,7 +124,7 @@ export default function PHero() {
   const sp = useSpring(scrollYProgress, { stiffness: 90, damping: 24 });
   const rotateX = useTransform(sp, [0, 1], [24, 0]);
   const scale = useTransform(sp, [0, 1], [0.9, 1]);
-  const shown = [p.toasts[t], p.toasts[(t + p.toasts.length - 1) % p.toasts.length]];
+  const shown = late ? [p.toasts[t]] : [];
 
   return (
     <section className="pt-page pt-hero" id="inicio" aria-labelledby="pt-h1">
@@ -141,7 +146,7 @@ export default function PHero() {
         <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .65, duration: .7 }}>
           <QuickDemo id="pedir" />
           <div className="pt-ctas">
-            <button type="button" className="btn ghost" onClick={() => irA("demo")}>▶ {h.invite}</button>
+            <button type="button" className="btn ghost" onClick={() => irA("cierre")}>{ui.start} <span className="fl">↓</span></button>
             <a href="#planes" className="pt-textlink" onClick={(e) => { e.preventDefault(); irA("planes"); }}>{h.noteLink} →</a>
           </div>
           <p className="pt-note">{h.note}</p>

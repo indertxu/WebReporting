@@ -17,7 +17,7 @@ export default {
     typing: ["på timer, ikke dage.", "uden kopier og indsæt.", "fra konsolideret tal til postering.", "med ECB-kurserne på plads."],
     subLead: "Uden et regneark imellem.",
     sub: "Next Reporting modtager hvert selskabs regnskab, afstemmer det, omregner det til koncernvalutaen og giver det tilbage som ledelsesrapporter, KPI'er og præsentationer.",
-    note: "En demo på 30 minutter med jeres egne tal. Vi svarer inden for 24 timer.",
+    note: "Vi viser jer produktet på 30 minutter med en eksempelkoncern. Vi svarer inden for 24 timer.",
     noteLink: "Se planerne",
     invite: "Det her er Next Reporting. Prøv den.",
   },
@@ -187,7 +187,7 @@ export default {
     title: "I vælger, hvor *jeres data kommer ind.*",
     lead: "Rapporterne er de samme i alle planer. Det, der ændrer sig, er hvor Next Reporting læser fra, og hvor dybt den går.",
     steps: [
-      { t: "En demo med jeres tal", b: "Tag ét selskabs Excel med og se den indlæst, afstemt og i en rapport." },
+      { t: "En demo på 30 minutter", b: "Vi viser produktet med en eksempelkoncern: indlæsning, afstemning, rapporter og præsentationer." },
       { t: "Vælg plan", b: "Ud fra hvor jeres data ligger i dag: Konsolidator, jeres filer eller jeres Data Warehouse." },
       { t: "Første lukning indeni", b: "Vi sætter struktur og mappings op sammen med jer, og næste lukning kommer herfra." },
     ],
@@ -248,8 +248,8 @@ export default {
     ],
   },
   final: {
-    title: "Skal vi prøve den *på jeres lukning?*",
-    lead: "Tag ét selskabs Excel med, præcis som den kommer fra ERP'et. På 30 minutter ser I den indlæst, afstemt og omsat til rapport.",
+    title: "Skal vi se på det *sammen?*",
+    lead: "På 30 minutter viser vi, hvordan en eksempelkoncern går fra hvert selskabs Excel til bestyrelsesrapporten. Uforpligtende.",
     full: "Foretrækker I den fulde formular?",
   },
   portal: {
@@ -270,8 +270,8 @@ export default {
             "home"
           ],
           [
-            "demo",
-            "Live demo",
+            "cierre",
+            "Hver lukning",
             "play"
           ]
         ]

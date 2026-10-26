@@ -17,7 +17,7 @@ export default {
     typing: ["in hours, not days.", "without copy and paste.", "from consolidated to entry.", "with ECB rates already in."],
     subLead: "No spreadsheet in between.",
     sub: "Next Reporting takes each company's accounts, checks they balance, converts them to group currency and hands them back as management reports, KPIs and presentations.",
-    note: "A 30-minute demo with your own numbers. We reply within 24 h.",
+    note: "We'll show you the product in 30 minutes, with a sample group. We reply within 24 h.",
     noteLink: "See the plans",
     invite: "This is Next Reporting. Go on, touch it.",
   },
@@ -187,7 +187,7 @@ export default {
     title: "You choose where *your data comes in.*",
     lead: "The reports are the same on every plan. What changes is where Next Reporting reads from and how deep it goes.",
     steps: [
-      { t: "A demo with your numbers", b: "Bring one company's Excel and see it loaded, balanced and in a report." },
+      { t: "A 30-minute demo", b: "We show you the product with a sample group: loads, checks, reports and presentations." },
       { t: "Pick a plan", b: "Based on where your data lives today: Konsolidator, your files or your Data Warehouse." },
       { t: "First close inside", b: "We set up structure and mappings with you, and your next close comes out of here." },
     ],
@@ -248,8 +248,8 @@ export default {
     ],
   },
   final: {
-    title: "Shall we try it *on your close?*",
-    lead: "Bring one company's Excel exactly as it leaves the ERP. In 30 minutes you'll see it loaded, balanced and turned into a report.",
+    title: "Shall we take a look *together?*",
+    lead: "In 30 minutes we show you how a sample group goes from each company's Excel to the board report. No commitment.",
     full: "Prefer the full form?",
   },
   portal: {
@@ -270,8 +270,8 @@ export default {
             "home"
           ],
           [
-            "demo",
-            "Live demo",
+            "cierre",
+            "Every close",
             "play"
           ]
         ]
