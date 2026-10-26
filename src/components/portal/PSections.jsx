@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, Plus, ShieldCheck, Lock, Users, KeyRound, ScrollText, Languages, CornerDownRight } from "lucide-react";
+import { Check, Plus, ArrowRight, ShieldCheck, Lock, Users, KeyRound, ScrollText, Languages, CornerDownRight } from "lucide-react";
 import { useLanding, Hl, irA } from "@/components/report/shared";
 import QuickDemo from "@/components/report/QuickDemo";
+import { BrandMark } from "./Logo";
 import { useCount, useInView, useReveal, useTick, useSpotlight, useWide } from "./hooks";
-import { STEPS, pad } from "./Portal";
+import { STEPS, pad, goDemo, useSteps } from "./Portal";
 
 /** Cabecera de cada pantalla: el número de paso del recorrido + título + entradilla. */
 const SID = { automatico: "auto" };
@@ -44,6 +45,37 @@ export function PClose() {
             </div>
           ))}
         </div>
+      </div>
+    </section>
+  );
+}
+
+/** Fila de llamada a la acción al final de una sección. */
+export function CtaRow({ plans = true }) {
+  const { c } = useLanding();
+  const { ui } = useSteps();
+  return (
+    <div className="pt-ctarow rv">
+      <button type="button" className="btn lg" onClick={goDemo}>{c.form.cta} <ArrowRight size={17} className="fl" /></button>
+      {plans && <button type="button" className="btn lg ghost" onClick={() => irA("planes")}>{ui.plans}</button>}
+    </div>
+  );
+}
+
+/** Banda de demo a media página: el punto más claro de la pantalla. */
+export function PCta({ which = 1, id }) {
+  const { ui } = useSteps();
+  const ref = useReveal();
+  const [t, s] = which === 2 ? ui.band2 : ui.band1;
+  return (
+    <section className="pt-band" ref={ref} aria-label={t.replace(/\*/g, "")}>
+      <div className="pt-band-in rv">
+        <span className="pt-band-glow" aria-hidden />
+        <div className="pt-band-txt">
+          <h2 className="pt-band-h"><Hl text={t} /></h2>
+          <p>{s}</p>
+        </div>
+        <div className="pt-band-form"><QuickDemo id={id} /></div>
       </div>
     </section>
   );
@@ -95,7 +127,7 @@ export function PFlow() {
             ))}
           </ul>
           <div className="pt-hub">
-            <div><img src="/favicon.svg" alt="" /><b>{f.hub}</b><span>{f.hubSub}</span></div>
+            <div><div className="pt-hubmark"><BrandMark size={50} /></div><b>{f.hub}</b><span>{f.hubSub}</span></div>
           </div>
           <ul className="out">
             {f.outputs.map((n, i) => (
@@ -107,6 +139,7 @@ export function PFlow() {
           <span className="pt-k">{f.everyLoad.title}</span>
           <ul>{f.everyLoad.items.map((t) => <li key={t}><span className="pt-tic">✓</span>{t}</li>)}</ul>
         </div>
+        <CtaRow />
       </div>
     </section>
   );
@@ -327,6 +360,7 @@ export function PScreens() {
             </div>
           </div>
         </div>
+        <CtaRow />
       </div>
     </section>
   );
@@ -376,7 +410,7 @@ export function PPlans() {
               <p className="who">{pl.who}</p>
               <div className="src">{pl.source}</div>
               <ul>{pl.features.map((f) => <li key={f}><span className="pt-tic">✓</span>{f}</li>)}</ul>
-              <button className={`btn ${rec === pl.id ? "" : "ghost"}`} type="button" onClick={() => irA("contacto")}>{pl.cta} <span className="fl">→</span></button>
+              <button className={`btn ${rec === pl.id ? "" : "ghost"}`} type="button" onClick={goDemo}>{pl.cta} <span className="fl">→</span></button>
             </motion.article>
           ))}
         </div>

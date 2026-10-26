@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useI18n } from "@/lib/i18n";
 import LegalModal from "@/components/landing/LegalModal";
+import Logo from "./Logo";
 
 /** Pie del portal: los mismos textos y avisos legales que el pie del sitio, en oscuro. */
 export default function PFooter() {
@@ -13,10 +14,7 @@ export default function PFooter() {
       <footer className="pt-footer">
         <div className="pt-in">
           <div>
-            <div className="pt-brand" style={{ padding: 0 }}>
-              <img src="/favicon.svg" alt="" />
-              <span><b>Next Reporting</b><small>by Next Finance</small></span>
-            </div>
+            <div className="pt-brand"><Logo /></div>
             <p>{ft.tagline}</p>
           </div>
           {cols.map((col) => (

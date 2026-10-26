@@ -3,7 +3,8 @@ import { useLocation } from "react-router-dom";
 import PFooter from "@/components/portal/PFooter";
 import Portal, { NextStep } from "@/components/portal/Portal";
 import PHero from "@/components/portal/PHero";
-import { PClose, PFlow, PAuto, PTasks, PMoney, PScreens, PPlans, PSecurity, PFaq, PContact } from "@/components/portal/PSections";
+import PTour from "@/components/portal/PTour";
+import { PClose, PCta, PFlow, PAuto, PTasks, PMoney, PPlans, PSecurity, PFaq, PContact } from "@/components/portal/PSections";
 import { useI18n } from "@/lib/i18n";
 import "@/components/report/nr.css";
 import "@/components/portal/portal.css";
@@ -31,10 +32,12 @@ export default function Home() {
       <PAuto />
       <NextStep to="ahorro" />
       <PTasks />
+      <PCta which={1} id="pedir-3" />
       <NextStep to="monedas" />
       <PMoney />
       <NextStep to="pantallas" />
-      <PScreens />
+      <PTour />
+      <PCta which={2} id="pedir-4" />
       <NextStep to="planes" />
       <PPlans />
       <NextStep to="seguridad" />

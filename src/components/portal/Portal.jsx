@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { motion, useScroll, useSpring, useTransform, AnimatePresence } from "framer-motion";
-import { Menu, X, Globe, ChevronDown, Sun, Moon, ArrowDown, ArrowUp } from "lucide-react";
+import { Menu, X, Globe, ChevronDown, Sun, Moon, ArrowDown, ArrowUp, ArrowRight } from "lucide-react";
+import Logo from "./Logo";
 import { useI18n } from "@/lib/i18n";
 import { useLanding, irA } from "@/components/report/shared";
 import { reduced } from "./hooks";
@@ -11,12 +12,18 @@ export const SIGNIN_URL = "https://nextreport.atebiz.com/";
 export const STEPS = ["inicio", "cierre", "datos", "auto", "ahorro", "monedas", "pantallas", "planes", "seguridad", "faq", "contacto"];
 const NAV = ["cierre", "datos", "auto", "ahorro", "pantallas", "planes", "faq"];
 const UI = {
-  es: { start: "Empieza el recorrido", step: "Paso", of: "de", next: "Siguiente", top: "Volver arriba", light: "Modo claro", dark: "Modo oscuro" },
-  en: { start: "Take the tour", step: "Step", of: "of", next: "Next", top: "Back to top", light: "Light mode", dark: "Dark mode" },
-  pt: { start: "Comece o percurso", step: "Passo", of: "de", next: "Seguinte", top: "Voltar ao topo", light: "Modo claro", dark: "Modo escuro" },
-  da: { start: "Tag rundturen", step: "Trin", of: "af", next: "Næste", top: "Til toppen", light: "Lyst tema", dark: "Mørkt tema" },
+  es: { plans: "Ver planes", band1: ["Deja de montar el cierre *a mano.*", "En 30 minutos te enseñamos cómo queda el reporting de un grupo como el tuyo."], band2: ["Así lo verá tu dirección *el día 5.*", "Informes, KPIs y presentaciones listos, del consolidado al asiento. Pide una demo y te lo enseñamos."], start: "Empieza el recorrido", step: "Paso", of: "de", next: "Siguiente", top: "Volver arriba", light: "Modo claro", dark: "Modo oscuro" },
+  en: { plans: "See plans", band1: ["Stop building the close *by hand.*", "In 30 minutes we show you what reporting looks like for a group like yours."], band2: ["What your board sees *on day 5.*", "Reports, KPIs and presentations ready, from consolidation to journal entry. Book a demo and we'll show you."], start: "Take the tour", step: "Step", of: "of", next: "Next", top: "Back to top", light: "Light mode", dark: "Dark mode" },
+  pt: { plans: "Ver planos", band1: ["Deixe de montar o fecho *à mão.*", "Em 30 minutos mostramos como fica o reporting de um grupo como o seu."], band2: ["É assim que a administração o vê *no dia 5.*", "Relatórios, KPIs e apresentações prontos, do consolidado ao lançamento. Peça uma demo e mostramos."], start: "Comece o percurso", step: "Passo", of: "de", next: "Seguinte", top: "Voltar ao topo", light: "Modo claro", dark: "Modo escuro" },
+  da: { plans: "Se planer", band1: ["Stop med at bygge lukningen *i hånden.*", "På 30 minutter viser vi, hvordan rapporteringen ser ud for en koncern som jeres."], band2: ["Sådan ser ledelsen det *på dag 5.*", "Rapporter, KPI'er og præsentationer klar, fra konsolidering til postering. Book en demo, så viser vi det."], start: "Tag rundturen", step: "Trin", of: "af", next: "Næste", top: "Til toppen", light: "Lyst tema", dark: "Mørkt tema" },
 };
 export const pad = (n) => String(n).padStart(2, "0");
+
+/** Todas las llamadas a la acción llevan aquí: baja al formulario final y deja el cursor en el email. */
+export function goDemo() {
+  irA("contacto");
+  setTimeout(() => document.querySelector("#pedir-2 input")?.focus({ preventScroll: true }), 900);
+}
 
 /** Nombre de cada paso, sacado de la navegación del portal en el idioma activo. */
 export function useSteps() {
@@ -110,6 +117,19 @@ export default function Portal({ children, footer }) {
   const [act, setAct] = useState("inicio");
   const [open, setOpen] = useState(false);
   const [small, setSmall] = useState(false);
+  const [hide, setHide] = useState(false);
+  const lastY = useRef(0);
+
+  // La barra se esconde al bajar y vuelve en cuanto subes
+  useEffect(() => {
+    const on = () => {
+      const y = scrollY, dy = y - lastY.current;
+      if (Math.abs(dy) > 6) { setHide(dy > 0 && y > 240); lastY.current = y; }
+      if (y < 80) setHide(false);
+    };
+    addEventListener("scroll", on, { passive: true });
+    return () => removeEventListener("scroll", on);
+  }, []);
   const cursor = useRef(null);
   const { scrollYProgress } = useScroll();
   const prog = useSpring(scrollYProgress, { stiffness: 140, damping: 30 });
@@ -203,11 +223,10 @@ export default function Portal({ children, footer }) {
       <div className="pt-cursor" ref={cursor} aria-hidden />
       <motion.div className="pt-progress" style={{ scaleX: prog }} aria-hidden />
 
-      <header className={`pt-nav ${small ? "small" : ""}`}>
+      <header className={`pt-nav ${small ? "small" : ""} ${hide && !open ? "hide" : ""}`}>
         <motion.div className="pt-nav-in" initial={{ y: -40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: .8, ease: [.16, 1, .3, 1] }}>
           <a href="#inicio" className="pt-brand" onClick={(e) => { e.preventDefault(); go("inicio"); }} aria-label="Next Reporting">
-            <img src="/favicon.svg" alt="" />
-            <span><b>Next Reporting</b><small>by Next Finance</small></span>
+            <Logo />
           </a>
           <nav className="pt-links" aria-label="Principal">
             {NAV.map((id) => (
@@ -218,10 +237,10 @@ export default function Portal({ children, footer }) {
             ))}
           </nav>
           <div className="pt-nav-r">
-            <ThemeToggle theme={theme} setTheme={setTheme} ui={ui} />
-            <Lang />
-            <a className="btn ghost sm" href={SIGNIN_URL} target="_blank" rel="noopener noreferrer">{c.nav.signIn}</a>
-            <button type="button" className="btn sm hide-m" onClick={() => go("contacto")}>{c.nav.demo}</button>
+            <span className="hide-s"><ThemeToggle theme={theme} setTheme={setTheme} ui={ui} /></span>
+            <span className="hide-s"><Lang /></span>
+            <a className="btn ghost sm hide-s" href={SIGNIN_URL} target="_blank" rel="noopener noreferrer">{c.nav.signIn}</a>
+            <button type="button" className="btn sm pt-navcta" onClick={() => { setOpen(false); goDemo(); }}>{c.nav.demo} <ArrowRight size={14} className="fl" /></button>
             <button className="pt-icobtn pt-hamb" type="button" aria-label="Menú" aria-expanded={open} onClick={() => setOpen(!open)}>{open ? <X size={18} /> : <Menu size={18} />}</button>
           </div>
         </motion.div>
@@ -232,8 +251,12 @@ export default function Portal({ children, footer }) {
                 <a key={id} href={`#${id}`} className={act === id ? "on" : ""} onClick={(e) => { e.preventDefault(); go(id); }}><i>{pad(k + 1)}</i>{names[id]}</a>
               ))}
               <div className="row">
+                <ThemeToggle theme={theme} setTheme={setTheme} ui={ui} />
+                <Lang />
                 <a className="btn ghost" href={SIGNIN_URL} target="_blank" rel="noopener noreferrer">{c.nav.signIn}</a>
-                <button type="button" className="btn" onClick={() => go("contacto")}>{c.nav.demo}</button>
+              </div>
+              <div className="row">
+                <button type="button" className="btn lg" onClick={() => { setOpen(false); goDemo(); }}>{c.nav.demo} <ArrowRight size={16} className="fl" /></button>
               </div>
             </motion.div>
           )}
@@ -267,8 +290,9 @@ export default function Portal({ children, footer }) {
               {last ? (
                 <button type="button" className="btn sm ghost" onClick={() => go("inicio")}><ArrowUp size={14} /> <span className="lbl">{ui.top}</span></button>
               ) : (
-                <button type="button" className="btn sm" onClick={() => go(nextId)}><span className="lbl">{ui.next}: {names[nextId]}</span> <span className="bob"><ArrowDown size={14} /></span></button>
+                <button type="button" className="btn sm ghost" onClick={() => go(nextId)} title={`${ui.next}: ${names[nextId]}`}><span className="lbl">{ui.next}: {names[nextId]}</span> <span className="bob"><ArrowDown size={14} /></span></button>
               )}
+              {!last && <button type="button" className="btn sm pt-dockcta" onClick={goDemo}>{c.nav.demo} <ArrowRight size={14} className="fl" /></button>}
             </motion.nav>
           )}
         </AnimatePresence>
