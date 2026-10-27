@@ -176,7 +176,7 @@ export default function Portal({ children, footer }) {
       });
       // Foco: lo que pasa por el centro de la pantalla se enciende, lo demás se apaga un poco
       const lo = vh * 0.28, hi = vh * 0.72, fall = vh * 0.32;
-      document.querySelectorAll(".pt-main .pt-card, .pt-tr, .pt-q, .pt-page, .pt-faq details").forEach((el) => {
+      document.querySelectorAll(".pt-main .pt-card, .pt-tr, .pt-page, .pt-faq details").forEach((el) => {
         if (el.closest(".pt-hero")) return;
         const r = el.getBoundingClientRect();
         const d = Math.max(0, r.top - hi, lo - r.bottom);

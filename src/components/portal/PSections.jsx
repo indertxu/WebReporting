@@ -29,19 +29,14 @@ export function PClose() {
   const { c } = useLanding();
   const q = c.questions;
   const ref = useReveal();
-  const wide = useWide();
-  const [qr, qrOn] = useInView({ once: false, margin: "-20% 0px -20% 0px" });
-  const qOn = wide && qrOn;
-  const sp = useSpotlight(q.items.length, 3800, qOn);
   return (
     <section className="pt-page" id="cierre" ref={ref} aria-labelledby="pt-cierre">
       <div className="pt-in">
         <Head path="cierre" eyebrow={q.eyebrow} title={q.title} lead={q.lead} center />
-        <div className="pt-qrow" ref={qr}>
-          {q.items.map((it, i) => (
-            <div key={it.k} className={`pt-q rv ${qOn ? (sp.i === i ? "lit" : "") : "lit"}`} {...sp.props(i)}>
+        <div className="pt-qrow">
+          {q.items.map((it) => (
+            <div key={it.k} className="pt-q rv">
               <span className="mono">{it.k}</span><b>{it.title}</b><p>{it.body}</p>
-              {qOn && sp.i === i && !sp.hold && <span className="pt-timer" key={`t${sp.i}`} style={{ animationDuration: "3800ms" }} />}
             </div>
           ))}
         </div>
